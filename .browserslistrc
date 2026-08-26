@@ -1,0 +1,12 @@
+# Modern browsers only — removes unnecessary polyfills for
+# Array.prototype.at, flat, flatMap, Object.fromEntries, etc.
+# These features are supported by all browsers released after 2022.
+> 0.5%
+last 2 versions
+not dead
+not op_mini all
+chrome >= 100
+firefox >= 100
+edge >= 100
+safari >= 15
+ios >= 15

@@ -1,0 +1,54 @@
+# TyeFlo — Caddy gateway configuration
+# Port 80 (HTTP) → redirects to HTTPS (production)
+# Port 443 (HTTPS) → serves the Next.js app on :3000
+
+# Production domain (uncomment and set your domain for HTTPS auto-cert)
+# tyeflo.com {
+#         encode gzip zstd
+#
+#         # Security headers
+#         header {
+#                 Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+#                 X-Content-Type-Options nosniff
+#                 X-Frame-Options SAMEORIGIN
+#                 Referrer-Policy strict-origin-when-cross-origin
+#                 Permissions-Policy "camera=(), microphone=(), geolocation=()"
+#         }
+#
+#         reverse_proxy localhost:3000 {
+#                 header_up Host {host}
+#                 header_up X-Forwarded-For {remote_host}
+#                 header_up X-Forwarded-Proto {scheme}
+#                 header_up X-Real-IP {remote_host}
+#         }
+# }
+
+# Sandbox / local gateway (port 81)
+:81 {
+        @transform_port_query {
+                query XTransformPort=*
+        }
+
+        handle @transform_port_query {
+                reverse_proxy localhost:{query.XTransformPort} {
+                        header_up Host {host}
+                        header_up X-Forwarded-For {remote_host}
+                        header_up X-Forwarded-Proto {scheme}
+                        header_up X-Real-IP {remote_host}
+                }
+        }
+
+        handle {
+                reverse_proxy localhost:3000 {
+                        header_up Host {host}
+                        header_up X-Forwarded-For {remote_host}
+                        header_up X-Forwarded-Proto {scheme}
+                        header_up X-Real-IP {remote_host}
+                }
+        }
+}
+
+# HTTP → HTTPS redirect (production)
+# :80 {
+#         redir https://{host}{uri} permanent
+# }
