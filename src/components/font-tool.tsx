@@ -358,11 +358,10 @@ export function FontTool({
           </div>
 
           {/* Mobile category pills */}
-          <div
-            className="-mx-4 mb-4 flex items-center gap-2 overflow-x-auto px-4 pb-2 font-scroll lg:hidden"
-            role="tablist"
-            aria-label="Font categories"
-          >
+          <nav
+  className="mx-4 mb-4 flex items-center gap-2 overflow-x-auto px-4 pb-2 ..."
+  aria-label="Font categories"
+>
             {FONT_CLUSTERS.map(renderCategoryPill)}
             <button
               className="flex shrink-0 items-center justify-center rounded-full border border-border bg-card p-2 text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
@@ -370,7 +369,7 @@ export function FontTool({
             >
               <Settings2 className="h-4 w-4" />
             </button>
-          </div>
+          </nav>
 
           {/* Mobile heading */}
           <div className="mb-3 flex items-center justify-between lg:hidden">

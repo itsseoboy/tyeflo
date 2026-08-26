@@ -73,7 +73,7 @@ export function RotatingWord() {
   }, []);
 
   return (
-    <span className="relative inline-flex items-baseline" aria-label="Font">
+    <span className="relative inline-flex items-baseline">
       <span className="text-primary" dir="auto">
         {mounted ? typed : WORDS[0]}
       </span>
