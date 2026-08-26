@@ -84,13 +84,33 @@ export function FontTool({
     setVisibleCount(PAGE_SIZE);
   }, [activeCluster]);
 
-  const styles: FontStyle[] = React.useMemo(
-    () => getStylesByCluster(activeCluster),
-    [activeCluster]
-  );
-  const visibleStyles = styles.slice(0, visibleCount);
-  const hasMore = visibleCount < styles.length;
+ const styles: FontStyle[] = React.useMemo(
+  () => getStylesByCluster(activeCluster),
+  [activeCluster]
+);
 
+const visibleStyles = React.useMemo(
+  () => styles.slice(0, visibleCount),
+  [styles, visibleCount]
+);
+
+const hasMore = visibleCount < styles.length;
+
+const cluster = FONT_CLUSTERS.find((c) => c.slug === activeCluster);
+const headingText = cluster
+  ? `${cluster.name} Fonts`
+  : "Popular Fonts";
+
+const source = text.trim() || PREVIEW_FALLBACK;
+
+const transformedStyles = React.useMemo(
+  () =>
+    visibleStyles.map((style) => ({
+      style,
+      styled: style.transform(source),
+    })),
+  [visibleStyles, source]
+);
   const handleInspire = () => {
     const pick = SAMPLE_TEXTS[Math.floor(Math.random() * SAMPLE_TEXTS.length)];
     setText(pick);
@@ -116,12 +136,6 @@ export function FontTool({
     setBulkCopied(true);
     window.setTimeout(() => setBulkCopied(false), 1500);
   };
-
-  const cluster = FONT_CLUSTERS.find((c) => c.slug === activeCluster);
-  const headingText = cluster
-    ? `${cluster.name} Fonts`
-    : "Popular Fonts";
-  const source = text.trim() || PREVIEW_FALLBACK;
 
   const renderCategoryPill = (c: (typeof FONT_CLUSTERS)[number]) => {
     const count = clusterFontCount(c.slug);
@@ -394,19 +408,16 @@ export function FontTool({
 
           {/* Font rows */}
           <div className="space-y-1.5">
-            {visibleStyles.map((style) => {
-              const styled = style.transform(source);
-              return (
-                <FontRow
-                  key={style.id}
-                  name={style.name}
-                  category={style.category}
-                  styled={styled}
-                  onCopy={() => copyText(styled, style.name)}
-                  fontSize={fontSize}
-                />
-              );
-            })}
+            {transformedStyles.map(({ style, styled }) => (
+  <FontRow
+    key={style.id}
+    name={style.name}
+    category={style.category}
+    styled={styled}
+    onCopy={() => copyText(styled, style.name)}
+    fontSize={fontSize}
+  />
+))}
           </div>
 
           {hasMore && (
