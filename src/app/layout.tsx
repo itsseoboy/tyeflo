@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   ...generateMetadata({
     title: "Font Generator — Fancy Text (Copy & Paste) | TyeFlo",
     description:
-      "Free online font generator. Convert your text into 200+ fancy Unicode fonts (cool, fancy, cursive, small, bold, glitch and more). Copy and paste anywhere — social media, games, bios, designs.",
+      "Free online font generator. Convert your text into 200+ fancy Unicode fonts. Copy and paste anywhere — social media, games, bios, designs.",
     path: "/",
     keywords: SITE_KEYWORDS,
   }),
