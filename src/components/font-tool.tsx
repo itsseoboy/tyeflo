@@ -239,6 +239,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
   />
   <span className="hidden sm:inline">Inspire me</span>
 </Button>
+        </div>
         <div className="mx-auto mt-2 flex max-w-3xl items-center gap-2">
           <Button
             variant="ghost"
@@ -418,7 +419,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
               className="flex shrink-0 items-center justify-center rounded-full border border-border bg-card p-2 text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
               aria-label="Font settings"
             >
-              <Settings2 className="h-4 w-4" />
+              <Settings2 className="h-4 w-4" aria-hidden="true" />
             </button>
           </nav>
 
