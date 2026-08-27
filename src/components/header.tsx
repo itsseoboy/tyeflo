@@ -26,7 +26,7 @@ const NAV_LINKS = [
 /** TyeFlo brand logo with wordmark. */
 function BrandLogo() {
   return (
-    <Link href="/" className="flex items-center gap-2">
+    <Link href="/" className="flex items-center gap-2" aria-label="TyeFlo home">
       <TyeFloLogo size={36} />
       <span className="text-[18px] font-bold tracking-tight text-primary">
         TyeFlo
@@ -43,23 +43,29 @@ export function Header() {
 
   React.useEffect(() => {
     const onScroll = () => {
-      // Use requestAnimationFrame to batch scroll reads/writes —
-      // prevents forced reflows from reading window.scrollY on every event
       if (ticking.current) return;
+
       ticking.current = true;
+
       requestAnimationFrame(() => {
         const current = window.scrollY;
+
         if (current > 100 && current > lastScroll.current) {
           setHidden(true);
         } else {
           setHidden(false);
         }
+
         lastScroll.current = current;
         ticking.current = false;
       });
     };
+
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   return (
@@ -70,27 +76,30 @@ export function Header() {
       )}
     >
       <div className="mx-auto flex h-16 max-w-6xl items-center gap-4 px-4 sm:px-6">
-        {/* Logo (left) */}
+        {/* Logo */}
         <BrandLogo />
 
-        {/* Right side: nav + theme toggle + mobile menu */}
+        {/* Right side */}
         <div className="ml-auto flex items-center gap-2">
-          {/* Desktop nav (right side) */}
-          <nav className="hidden items-center gap-1 md:flex">
-            {NAV_LINKS.map((l) => (
+          {/* Desktop navigation */}
+          <nav
+            className="hidden items-center gap-1 md:flex"
+            aria-label="Main navigation"
+          >
+            {NAV_LINKS.map((link) => (
               <Link
-                key={l.label}
-                href={l.href}
+                key={link.label}
+                href={link.href}
                 className="rounded-md px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
               >
-                {l.label}
+                {link.label}
               </Link>
             ))}
           </nav>
 
           <ThemeToggle />
 
-          {/* Mobile menu (right side) */}
+          {/* Mobile menu */}
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
               <Button
@@ -98,23 +107,29 @@ export function Header() {
                 size="icon"
                 className="md:hidden"
                 aria-label="Open menu"
+                title="Open menu"
               >
-                <Menu className="h-5 w-5" />
+                <Menu className="h-5 w-5" aria-hidden="true" />
               </Button>
             </SheetTrigger>
+
             <SheetContent side="right" className="w-[280px]">
               <SheetHeader>
                 <SheetTitle className="text-left">Menu</SheetTitle>
               </SheetHeader>
-              <nav className="mt-6 flex flex-col gap-1 px-4">
-                {NAV_LINKS.map((l) => (
+
+              <nav
+                className="mt-6 flex flex-col gap-1 px-4"
+                aria-label="Mobile navigation"
+              >
+                {NAV_LINKS.map((link) => (
                   <Link
-                    key={l.label}
-                    href={l.href}
+                    key={link.label}
+                    href={link.href}
                     className="rounded-lg px-3 py-2.5 text-sm font-medium text-foreground transition-colors hover:bg-muted"
                     onClick={() => setOpen(false)}
                   >
-                    {l.label}
+                    {link.label}
                   </Link>
                 ))}
               </nav>
