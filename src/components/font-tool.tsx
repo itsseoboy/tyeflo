@@ -222,20 +222,23 @@ const source = text.trim() || PREVIEW_FALLBACK;
                 className="h-8 w-8 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
                 aria-label="Clear text"
               >
-                <X className="h-4 w-4" />
+                <X className="h-4 w-4" aria-hidden="true" />
               </Button>
             )}
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleInspire}
-              className="rounded-full text-muted-foreground hover:bg-accent hover:text-primary"
-            >
-              <Wand2 className="h-4 w-4 sm:mr-1.5" />
-              <span className="hidden sm:inline">Inspire me</span>
-            </Button>
-          </div>
-        </div>
+      <Button
+  variant="ghost"
+  size="sm"
+  onClick={handleInspire}
+  className="rounded-full text-muted-foreground hover:bg-accent hover:text-primary"
+  aria-label="Inspire me"
+  title="Inspire me"
+>
+  <Wand2
+    className="h-4 w-4 sm:mr-1.5"
+    aria-hidden="true"
+  />
+  <span className="hidden sm:inline">Inspire me</span>
+</Button>
         <div className="mx-auto mt-2 flex max-w-3xl items-center gap-2">
           <Button
             variant="ghost"
@@ -244,7 +247,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
             className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
             aria-label="Decrease font size"
           >
-            <Minus className="h-4 w-4" />
+            <Minus className="h-4 w-4" aria-hidden="true" />
           </Button>
           <input
             type="range"
@@ -262,7 +265,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
             className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
             aria-label="Increase font size"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="h-4 w-4" aria-hidden="true" />
           </Button>
         </div>
       </div>
@@ -358,7 +361,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
                     className="h-8 w-8 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
                     aria-label="Clear text"
                   >
-                    <X className="h-4 w-4" />
+                    <X className="h-4 w-4" aria-hidden="true" />
                   </Button>
                 )}
                 <Button
@@ -366,8 +369,10 @@ const source = text.trim() || PREVIEW_FALLBACK;
                   size="sm"
                   onClick={handleInspire}
                   className="rounded-full text-muted-foreground hover:bg-accent hover:text-primary"
+                  aria-label="Inspire me"
+                  title="Inspire me"
                 >
-                  <Wand2 className="h-4 w-4" />
+                  <Wand2 className="h-4 w-4" aria-hidden="true" />
                   <span>Inspire me</span>
                 </Button>
               </div>
@@ -380,7 +385,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
                 className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
                 aria-label="Decrease font size"
               >
-                <Minus className="h-4 w-4" />
+                <Minus className="h-4 w-4" aria-hidden="true" />
               </Button>
               <input
                 type="range"
@@ -398,7 +403,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
                 className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
                 aria-label="Increase font size"
               >
-                <Plus className="h-4 w-4" />
+                <Plus className="h-4 w-4" aria-hidden="true" />
               </Button>
             </div>
           </div>
