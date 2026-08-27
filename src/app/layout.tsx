@@ -65,6 +65,7 @@ const HOW_TO_STEPS = [
   },
 ];
 
+
 const CATEGORY_LIST = [
   {
     name: "Font Generator — Copy & Paste",
@@ -183,6 +184,18 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         {/* Rank Math equivalent: JSON-LD Structured Data */}
+        <script
+  type="application/ld+json"
+  dangerouslySetInnerHTML={{
+    __html: JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "TyeFlo",
+      "alternateName": "tyeflo.com",
+      "url": "https://www.tyeflo.com/"
+    }),
+  }}
+/>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
