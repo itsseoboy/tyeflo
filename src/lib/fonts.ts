@@ -1265,12 +1265,24 @@ export const POPULAR_FONT_IDS: string[] = [
   "neg-circled",
 ];
 
+// Precomputed lookups keep the client from rebuilding Maps/filtering the
+// complete 80+ style list every time the tool renders.
+const FONT_STYLE_BY_ID = new Map(FONT_STYLES.map((style) => [style.id, style]));
+
+const FONT_STYLES_BY_CATEGORY = new Map<FontCategory, FontStyle[]>();
+for (const style of FONT_STYLES) {
+  const bucket = FONT_STYLES_BY_CATEGORY.get(style.category);
+  if (bucket) bucket.push(style);
+  else FONT_STYLES_BY_CATEGORY.set(style.category, [style]);
+}
+
 export function getStylesByCategory(category: "Popular" | FontCategory): FontStyle[] {
   if (category === "Popular") {
-    const byId = new Map(FONT_STYLES.map((s) => [s.id, s]));
-    return POPULAR_FONT_IDS.map((id) => byId.get(id)).filter(Boolean) as FontStyle[];
+    return POPULAR_FONT_IDS
+      .map((id) => FONT_STYLE_BY_ID.get(id))
+      .filter((style): style is FontStyle => Boolean(style));
   }
-  return FONT_STYLES.filter((s) => s.category === category);
+  return FONT_STYLES_BY_CATEGORY.get(category) ?? [];
 }
 
 /* ------------------------------------------------------------------ *
@@ -1387,26 +1399,41 @@ export const FONT_CLUSTERS: FontCluster[] = [
   },
 ];
 
+// Precompute cluster lookups once at module initialization.
+const FONT_CLUSTER_BY_SLUG = new Map(FONT_CLUSTERS.map((cluster) => [cluster.slug, cluster]));
+
+const FONT_STYLES_BY_CLUSTER = new Map<string, FontStyle[]>();
+for (const cluster of FONT_CLUSTERS) {
+  if (cluster.fontIds) {
+    FONT_STYLES_BY_CLUSTER.set(
+      cluster.slug,
+      cluster.fontIds
+        .map((id) => FONT_STYLE_BY_ID.get(id))
+        .filter((style): style is FontStyle => Boolean(style))
+    );
+    continue;
+  }
+
+  const categories = new Set(cluster.categories ?? []);
+  FONT_STYLES_BY_CLUSTER.set(
+    cluster.slug,
+    FONT_STYLES.filter((style) => categories.has(style.category))
+  );
+}
+
 /** Get fonts for a given cluster slug. */
 export function getStylesByCluster(slug: string): FontStyle[] {
-  const cluster = FONT_CLUSTERS.find((c) => c.slug === slug);
-  if (!cluster) return [];
-  if (cluster.fontIds) {
-    const byId = new Map(FONT_STYLES.map((s) => [s.id, s]));
-    return cluster.fontIds.map((id) => byId.get(id)).filter(Boolean) as FontStyle[];
-  }
-  const cats = cluster.categories ?? [];
-  return FONT_STYLES.filter((s) => cats.includes(s.category));
+  return FONT_STYLES_BY_CLUSTER.get(slug) ?? [];
 }
 
 /** Count fonts for a given cluster slug (for the sidebar badge). */
 export function clusterFontCount(slug: string): number {
-  return getStylesByCluster(slug).length;
+  return FONT_STYLES_BY_CLUSTER.get(slug)?.length ?? 0;
 }
 
 /** Find a cluster by slug. */
 export function getCluster(slug: string): FontCluster | undefined {
-  return FONT_CLUSTERS.find((c) => c.slug === slug);
+  return FONT_CLUSTER_BY_SLUG.get(slug);
 }
 
 /** Count styles per category (for the "All" badge etc.) */

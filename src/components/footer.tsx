@@ -1,52 +1,65 @@
-"use client";
-
-import * as React from "react";
 import Link from "next/link";
-import { TyeFloLogo } from "@/components/tyeflo-logo";
-
-const FOOTER_LINKS = [
-  { label: "Font Generator", href: "#tool" },
-  { label: "How it works", href: "#how-to-use" },
-  { label: "Use cases", href: "#use-cases" },
-  { label: "FAQ", href: "#faqs" },
-  { label: "Terms", href: "/terms" },
-  { label: "Privacy", href: "/privacy" },
-  { label: "Contact", href: "/contact" },
-];
 
 export function Footer() {
-  const [year, setYear] = React.useState<number | null>(null);
-  React.useEffect(() => setYear(new Date().getFullYear()), []);
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="mt-auto border-t border-border bg-background">
-      <div className="mx-auto max-w-6xl px-4 py-8 sm:px-6">
-        <div className="flex flex-col items-center gap-6 sm:flex-row sm:items-center sm:justify-between">
-          {/* Brand */}
-          <Link href="/" className="flex items-center gap-2">
-            <TyeFloLogo size={28} />
-            <span className="text-base font-bold tracking-tight text-primary">
-              TyeFlo
-            </span>
-          </Link>
-
-          {/* Links — inline, clean */}
-          <nav className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
-            {FOOTER_LINKS.map((l) => (
-              <Link
-                key={l.label}
-                href={l.href}
-                className="text-xs text-muted-foreground transition-colors hover:text-primary"
-              >
-                {l.label}
-              </Link>
-            ))}
-          </nav>
+    <footer className="border-t border-border bg-card">
+      <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-4 px-4 py-8 sm:flex-row sm:px-6">
+        <div className="text-center sm:text-left">
+          <p className="text-sm font-semibold text-foreground">
+            TyeFlo
+          </p>
+          <p className="mt-1 text-xs text-muted-foreground">
+            Free fancy text and font generator.
+          </p>
         </div>
 
-        <p className="mt-6 text-center text-xs text-muted-foreground">
-          © {year ?? 2025} TyeFlo — Free Copy &amp; Paste Font Generator. All rights reserved.
-        </p>
+        <nav
+          className="flex flex-wrap items-center justify-center gap-x-5 gap-y-2 text-xs text-muted-foreground"
+          aria-label="Footer navigation"
+        >
+          <Link
+            href="/"
+            className="transition-colors hover:text-foreground"
+          >
+            Home
+          </Link>
+
+          <Link
+            href="/about"
+            className="transition-colors hover:text-foreground"
+          >
+            About
+          </Link>
+
+          <Link
+            href="/contact"
+            className="transition-colors hover:text-foreground"
+          >
+            Contact
+          </Link>
+
+          <Link
+            href="/privacy"
+            className="transition-colors hover:text-foreground"
+          >
+            Privacy
+          </Link>
+
+          <Link
+            href="/terms"
+            className="transition-colors hover:text-foreground"
+          >
+            Terms
+          </Link>
+        </nav>
+      </div>
+
+      <div className="border-t border-border/50">
+        <div className="mx-auto max-w-6xl px-4 py-4 text-center text-xs text-muted-foreground sm:px-6">
+          © {year} TyeFlo. All rights reserved.
+        </div>
       </div>
     </footer>
   );

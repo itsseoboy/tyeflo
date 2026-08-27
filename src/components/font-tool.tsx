@@ -27,6 +27,7 @@ import {
   FONT_CLUSTERS,
   getStylesByCluster,
   clusterFontCount,
+  getCluster,
   type FontStyle,
 } from "@/lib/fonts";
 import { ClipboardBar } from "@/components/clipboard-bar";
@@ -45,6 +46,33 @@ const SAMPLE_TEXTS = [
 
 const PREVIEW_FALLBACK = "Type something to start";
 const PAGE_SIZE = 12;
+
+// Cache transformed strings by style + input. This avoids recalculating a style
+// when React re-renders for unrelated state changes (font size, clipboard, etc.).
+const TRANSFORM_CACHE = new WeakMap<FontStyle, Map<string, string>>();
+const MAX_CACHED_INPUTS_PER_STYLE = 24;
+
+function getTransformedText(style: FontStyle, source: string): string {
+  let cache = TRANSFORM_CACHE.get(style);
+  if (!cache) {
+    cache = new Map<string, string>();
+    TRANSFORM_CACHE.set(style, cache);
+  }
+
+  const cached = cache.get(source);
+  if (cached !== undefined) return cached;
+
+  const transformed = style.transform(source);
+
+  // Keep the cache bounded so long-running sessions cannot grow memory forever.
+  if (cache.size >= MAX_CACHED_INPUTS_PER_STYLE) {
+    const oldest = cache.keys().next().value;
+    if (oldest !== undefined) cache.delete(oldest);
+  }
+
+  cache.set(source, transformed);
+  return transformed;
+}
 
 const ICONS: Record<string, LucideIcon> = {
   Flame,
@@ -96,21 +124,25 @@ const visibleStyles = React.useMemo(
 
 const hasMore = visibleCount < styles.length;
 
-const cluster = FONT_CLUSTERS.find((c) => c.slug === activeCluster);
+const cluster = getCluster(activeCluster);
 const headingText = cluster
   ? `${cluster.name} Fonts`
   : "Popular Fonts";
 
 const source = text.trim() || PREVIEW_FALLBACK;
 
-const transformedStyles = React.useMemo(
-  () =>
-    visibleStyles.map((style) => ({
-      style,
-      styled: style.transform(source),
-    })),
-  [visibleStyles, source]
-);
+  // Keep the text input responsive while the font previews update as a
+  // non-urgent render. This is especially helpful on slower mobile CPUs.
+  const deferredSource = React.useDeferredValue(source);
+
+  const transformedStyles = React.useMemo(
+    () =>
+      visibleStyles.map((style) => ({
+        style,
+        styled: getTransformedText(style, deferredSource),
+      })),
+    [visibleStyles, deferredSource]
+  );
   const handleInspire = () => {
     const pick = SAMPLE_TEXTS[Math.floor(Math.random() * SAMPLE_TEXTS.length)];
     setText(pick);

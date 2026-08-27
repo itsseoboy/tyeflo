@@ -44,6 +44,10 @@ export const FontRow = React.memo(function FontRow({
   }, [styled, onCopy]);
 
   const empty = !styled.trim();
+  const ariaPreview = React.useMemo(() => {
+    const chars = Array.from(styled);
+    return chars.length > 40 ? `${chars.slice(0, 40).join("")}…` : chars.join("");
+  }, [styled]);
 
   return (
     <button
@@ -54,7 +58,7 @@ export const FontRow = React.memo(function FontRow({
         "group relative mb-1.5 block w-full overflow-hidden rounded-xl border border-border/50 bg-card px-4 py-3.5 text-left transition-all duration-200 hover:border-primary/30 hover:shadow-md last:mb-0 sm:px-5 sm:py-4",
         "focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
       )}
-      aria-label={`Copy ${name} font: ${Array.from(styled).slice(0, 40).join("")}${Array.from(styled).length > 40 ? "…" : ""}`}
+      aria-label={`Copy ${name} font: ${ariaPreview}`}
     >
       {/* Preview text */}
       <p

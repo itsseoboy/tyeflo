@@ -1,6 +1,6 @@
 "use client";
 
-import * as React from "react";
+import { useState } from "react";
 import { Check } from "lucide-react";
 
 /**
@@ -14,7 +14,7 @@ export function BioTemplateCard({
   label: string;
   lines: string[];
 }) {
-  const [copied, setCopied] = React.useState(false);
+  const [copied, setCopied] = useState(false);
 
   const handleClick = async () => {
     const text = lines.join("\n");
