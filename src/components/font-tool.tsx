@@ -221,53 +221,58 @@ const source = text.trim() || PREVIEW_FALLBACK;
                 onClick={() => setText("")}
                 className="h-8 w-8 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
                 aria-label="Clear text"
+                title="Clear text"
               >
                 <X className="h-4 w-4" aria-hidden="true" />
               </Button>
             )}
-      <Button
-  variant="ghost"
-  size="sm"
-  onClick={handleInspire}
-  className="rounded-full text-muted-foreground hover:bg-accent hover:text-primary"
-  aria-label="Inspire me"
-  title="Inspire me"
->
-  <Wand2
-    className="h-4 w-4 sm:mr-1.5"
-    aria-hidden="true"
-  />
-  <span className="hidden sm:inline">Inspire me</span>
-</Button>
-        </div>
-        <div className="mx-auto mt-2 flex max-w-3xl items-center gap-2">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setFontSize((s) => Math.max(10, s - 1))}
-            className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
-            aria-label="Decrease font size"
-          >
-            <Minus className="h-4 w-4" aria-hidden="true" />
-          </Button>
-          <input
-            type="range"
-            min={10}
-            max={32}
-            value={fontSize}
-            onChange={(e) => setFontSize(Number(e.target.value))}
-            className="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-border accent-[var(--primary)]"
-            aria-label="Adjust font size"
-          />
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => setFontSize((s) => Math.min(32, s + 1))}
-            className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
-            aria-label="Increase font size"
-          >
-            <Plus className="h-4 w-4" aria-hidden="true" />
-          </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleInspire}
+              className="rounded-full text-muted-foreground hover:bg-accent hover:text-primary"
+              aria-label="Inspire me"
+              title="Inspire me"
+            >
+              <Wand2
+                className="h-4 w-4 sm:mr-1.5"
+                aria-hidden="true"
+              />
+              <span className="hidden sm:inline">Inspire me</span>
+            </Button>
+          </div>
+
+          <div className="mx-auto mt-2 flex max-w-3xl items-center gap-2">
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setFontSize((s) => Math.max(10, s - 1))}
+              className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
+              aria-label="Decrease font size"
+              title="Decrease font size"
+            >
+              <Minus className="h-4 w-4" aria-hidden="true" />
+            </Button>
+            <input
+              type="range"
+              min={10}
+              max={32}
+              value={fontSize}
+              onChange={(e) => setFontSize(Number(e.target.value))}
+              className="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-border accent-[var(--primary)]"
+              aria-label="Adjust font size"
+            />
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setFontSize((s) => Math.min(32, s + 1))}
+              className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
+              aria-label="Increase font size"
+              title="Increase font size"
+            >
+              <Plus className="h-4 w-4" aria-hidden="true" />
+            </Button>
+          </div>
         </div>
       </div>
 
