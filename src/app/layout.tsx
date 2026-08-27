@@ -1,3 +1,4 @@
+import { GoogleAnalytics } from "@next/third-parties/google";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
@@ -18,7 +19,6 @@ const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
 });
-
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://tyeflo.com"),
@@ -66,17 +66,50 @@ const HOW_TO_STEPS = [
 ];
 
 const CATEGORY_LIST = [
-  { name: "Font Generator — Copy & Paste", url: "https://tyeflo.com/font-generator-copy-and-paste" },
-  { name: "Cursive Font Generator", url: "https://tyeflo.com/cursive-font-generator" },
-  { name: "Cute & Aesthetic Font Generator", url: "https://tyeflo.com/cute-aesthetic-font-generator" },
-  { name: "Fancy & Cool Font Generator", url: "https://tyeflo.com/fancy-cool-font-generator" },
-  { name: "Gothic & Scary Font Generator", url: "https://tyeflo.com/gothic-scary-font-generator" },
-  { name: "Old English & Retro Font Generator", url: "https://tyeflo.com/old-english-retro-font-generator" },
-  { name: "Gaming Font Generator", url: "https://tyeflo.com/gaming-font-generator" },
-  { name: "Instagram Font Generator", url: "https://tyeflo.com/instagram-font-generator" },
-  { name: "Symbol & Emoji Font Generator", url: "https://tyeflo.com/symbol-emoji-font-generator" },
-  { name: "Small & Bold Font Generator", url: "https://tyeflo.com/small-bold-font-generator" },
-  { name: "Seasonal Font Generator", url: "https://tyeflo.com/seasonal-font-generator" },
+  {
+    name: "Font Generator — Copy & Paste",
+    url: "https://tyeflo.com/font-generator-copy-and-paste",
+  },
+  {
+    name: "Cursive Font Generator",
+    url: "https://tyeflo.com/cursive-font-generator",
+  },
+  {
+    name: "Cute & Aesthetic Font Generator",
+    url: "https://tyeflo.com/cute-aesthetic-font-generator",
+  },
+  {
+    name: "Fancy & Cool Font Generator",
+    url: "https://tyeflo.com/fancy-cool-font-generator",
+  },
+  {
+    name: "Gothic & Scary Font Generator",
+    url: "https://tyeflo.com/gothic-scary-font-generator",
+  },
+  {
+    name: "Old English & Retro Font Generator",
+    url: "https://tyeflo.com/old-english-retro-font-generator",
+  },
+  {
+    name: "Gaming Font Generator",
+    url: "https://tyeflo.com/gaming-font-generator",
+  },
+  {
+    name: "Instagram Font Generator",
+    url: "https://tyeflo.com/instagram-font-generator",
+  },
+  {
+    name: "Symbol & Emoji Font Generator",
+    url: "https://tyeflo.com/symbol-emoji-font-generator",
+  },
+  {
+    name: "Small & Bold Font Generator",
+    url: "https://tyeflo.com/small-bold-font-generator",
+  },
+  {
+    name: "Seasonal Font Generator",
+    url: "https://tyeflo.com/seasonal-font-generator",
+  },
 ];
 
 const HOMEPAGE_HOWTO = howToSchema(HOW_TO_STEPS, {
@@ -88,11 +121,15 @@ const HOMEPAGE_HOWTO = howToSchema(HOW_TO_STEPS, {
 const HOMEPAGE_ITEMLIST = itemListSchema(CATEGORY_LIST);
 
 const HOMEPAGE_BREADCRUMB = breadcrumbSchema([
-  { name: "Home", url: "https://tyeflo.com" },
+  {
+    name: "Home",
+    url: "https://tyeflo.com",
+  },
 ]);
 
 /* Image SEO — ImageObject schemas for each image on the homepage.
    Helps Google Images index our infographics with proper context. */
+
 const HOMEPAGE_IMAGES = [
   {
     url: "/how-it-works-step-1.webp",
@@ -152,33 +189,47 @@ export default function RootLayout({
             __html: JSON.stringify(ORGANIZATION_SCHEMA),
           }}
         />
+
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(WEBAPP_SCHEMA),
           }}
         />
+
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(HOMEPAGE_HOWTO) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(HOMEPAGE_HOWTO),
+          }}
         />
+
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(HOMEPAGE_ITEMLIST) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(HOMEPAGE_ITEMLIST),
+          }}
         />
+
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(HOMEPAGE_BREADCRUMB) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(HOMEPAGE_BREADCRUMB),
+          }}
         />
+
         {/* Image SEO — one ImageObject schema per image on the homepage */}
         {HOMEPAGE_IMAGES.map((img, i) => (
           <script
             key={i}
             type="application/ld+json"
-            dangerouslySetInnerHTML={{ __html: JSON.stringify(img) }}
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify(img),
+            }}
           />
         ))}
       </head>
+
       <body
         className={`${geistSans.variable} antialiased bg-background text-foreground`}
       >
@@ -195,9 +246,14 @@ export default function RootLayout({
           >
             Skip to font generator
           </a>
+
           {children}
+
           <Toaster />
         </ThemeProvider>
+
+        {/* Google Analytics */}
+        <GoogleAnalytics gaId="G-RCWPPMHG23" />
       </body>
     </html>
   );
