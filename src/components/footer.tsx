@@ -63,7 +63,7 @@ export function Footer() {
           </a>
 
           <a
-            href="https://www.facebook.com/profile.php?id=61593678038292"
+            href="https://www.facebook.com/tyeflo"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-foreground"
