@@ -47,6 +47,61 @@ export function Footer() {
             Terms
           </Link>
         </nav>
+
+        <div
+          className="flex flex-wrap items-center justify-center gap-4 text-xs text-muted-foreground"
+          aria-label="Social media links"
+        >
+          <a
+            href="https://www.reddit.com/tyeflo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-foreground"
+            aria-label="TyeFlo on Reddit"
+          >
+            Reddit
+          </a>
+
+          <a
+            href="https://www.facebook.com/tyeflo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-foreground"
+            aria-label="TyeFlo on Facebook"
+          >
+            Facebook
+          </a>
+
+          <a
+            href="https://www.instagram.com/tyeflo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-foreground"
+            aria-label="TyeFlo on Instagram"
+          >
+            Instagram
+          </a>
+
+          <a
+            href="https://www.youtube.com/tyeflo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-foreground"
+            aria-label="TyeFlo on YouTube"
+          >
+            YouTube
+          </a>
+
+          <a
+            href="https://www.pinterest.com/tyeflo"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="transition-colors hover:text-foreground"
+            aria-label="TyeFlo on Pinterest"
+          >
+            Pinterest
+          </a>
+        </div>
       </div>
 
       <div className="border-t border-border/50">
@@ -57,3 +112,4 @@ export function Footer() {
     </footer>
   );
 }
+``
