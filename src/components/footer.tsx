@@ -53,7 +53,7 @@ export function Footer() {
           aria-label="Social media links"
         >
           <a
-            href="https://www.reddit.com/tyeflo"
+            href="https://www.reddit.com/user/tyeflo"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-foreground"
@@ -63,7 +63,7 @@ export function Footer() {
           </a>
 
           <a
-            href="https://www.facebook.com/tyeflo"
+            href="https://www.facebook.com/profile.php?id=61593678038292"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-foreground"
@@ -83,7 +83,7 @@ export function Footer() {
           </a>
 
           <a
-            href="https://www.youtube.com/tyeflo"
+            href="https://www.youtube.com/@tyeflo"
             target="_blank"
             rel="noopener noreferrer"
             className="transition-colors hover:text-foreground"
