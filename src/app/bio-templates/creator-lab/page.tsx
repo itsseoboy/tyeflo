@@ -125,7 +125,7 @@ export default async function CreatorLabPage() {
                   />
                 ) : (
                   <span className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 text-2xl font-bold text-primary">
-                    {(user.name ?? user.email).charAt(0).toUpperCase()}
+                    {(user.name ?? "Creator").charAt(0).toUpperCase()}
                   </span>
                 )}
 
@@ -133,9 +133,8 @@ export default async function CreatorLabPage() {
                   <h1 className="text-2xl font-bold text-foreground">
                     {user.name ?? "Creator"}
                   </h1>
-                  <p className="truncate text-sm text-muted-foreground">
-                    {user.email}
-                  </p>
+                  {/* Email intentionally not shown — the badge is the
+                      public identity, and this keeps screenshots safe. */}
                   <CreatorBadge
                     username={user.username}
                     name={user.name}

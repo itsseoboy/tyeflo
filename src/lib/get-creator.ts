@@ -3,10 +3,12 @@ import { db } from "@/lib/db";
 
 /**
  * Reads the signed-in user from Supabase and makes sure a matching row
- * exists in OUR User table (where points and templates live).
+ * exists in OUR User table (where username, points and templates live).
  *
- * Supabase owns the login; we own the creator data. This helper is the
- * bridge between them. Returns null when not signed in.
+ * Name/image are set at account creation. Afterwards the name is NOT
+ * overwritten from Google on every login — manual changes (e.g. an
+ * admin renaming themselves) persist. Only the avatar re-syncs, since
+ * profile pictures change on Google's side.
  */
 export async function getCreator() {
   const supabase = await createClient();
@@ -23,7 +25,6 @@ export async function getCreator() {
   const dbUser = await db.user.upsert({
     where: { id: user.id },
     update: {
-      name: name ?? undefined,
       image: avatar ?? undefined,
     },
     create: {
