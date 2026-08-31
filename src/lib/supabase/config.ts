@@ -14,10 +14,10 @@
  */
 
 export const SUPABASE_URL =
-  process.env.NEXT_PUBLIC_SUPABASE_URL ?? https://rpojpjnmtwfbfudxgetn.supabase.co";
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://rpojpjnmtwfbfudxgetn.supabase.co";
 
 export const SUPABASE_ANON_KEY =
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? sb_publishable_rtTGVjD0Z__kAv4zr24IRg_4mz6ztqJ;
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "sb_publishable_rtTGVjD0Z__kAv4zr24IRg_4mz6ztqJ";
 
 /** True when both values are usable. */
 export function hasSupabaseConfig(): boolean {
