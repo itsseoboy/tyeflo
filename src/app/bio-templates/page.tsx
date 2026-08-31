@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Plus, Users } from "lucide-react";
 import { Header } from "@/components/header";
@@ -12,8 +12,8 @@ import { db } from "@/lib/db";
 /** Templates with this many reports are hidden automatically. */
 const REPORT_HIDE_THRESHOLD = 5;
 
-/** Community templates come from the live database - always fresh. */
-export const dynamic = "force-dynamic";
+/** Community templates cached 60s, refreshed in background. */
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Bio Templates - Copy & Paste Bios for Instagram, Discord, LinkedIn & Gaming | TyeFlo",
