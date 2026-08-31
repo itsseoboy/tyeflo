@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Sparkles, Hammer } from "lucide-react";
+import { ArrowLeft, Sparkles, Hammer, ShieldCheck } from "lucide-react";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
 import { ScrollToTop } from "@/components/scroll-to-top";
@@ -27,6 +27,7 @@ export default async function CreatorLabPage() {
 
   const user = creator?.dbUser ?? null;
   const { level } = levelFromPoints(user?.points ?? 0);
+  const isAdmin = user?.role === "admin";
   const nextAt = user ? nextLevelAt(user.points) : null;
   const currentFloor = user
     ? LEVELS.filter((l) => user.points >= l.min).pop()?.min ?? 0
@@ -139,6 +140,7 @@ export default async function CreatorLabPage() {
                     username={user.username}
                     name={user.name}
                     points={user.points}
+                    role={user.role}
                     className="mt-2"
                   />
                 </div>
@@ -146,68 +148,8 @@ export default async function CreatorLabPage() {
                 <SignOutButton />
               </div>
 
-              {/* Stats */}
-              <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="rounded-xl border border-border bg-card p-5 text-center">
-                  <p className="text-3xl font-bold text-primary">
-                    {user.points}
-                  </p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Creator Points
-                  </p>
-                </div>
-                <div className="rounded-xl border border-border bg-card p-5 text-center">
-                  <p className="flex items-center justify-center gap-2 text-3xl font-bold text-primary">
-                    <LevelIcon level={level} className="h-6 w-6" />
-                    Lv {level}
-                  </p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Current Level
-                  </p>
-                </div>
-                <div className="rounded-xl border border-border bg-card p-5 text-center">
-                  <p className="text-3xl font-bold text-primary">
-                    {creator!.templateCount}
-                  </p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Templates Published
-                  </p>
-                </div>
-              </div>
-
-              {/* Progress to next level */}
-              <div className="mt-6 rounded-xl border border-border bg-card p-5">
-                <div className="mb-2 flex items-center justify-between text-sm">
-                  <span className="font-semibold text-foreground">
-                    {nextAt !== null
-                      ? `${nextAt - user.points} points to Level ${level + 1}`
-                      : "Max level reached"}
-                  </span>
-                  <span className="text-muted-foreground">{progress}%</span>
-                </div>
-                <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
-                  <div
-                    className="h-full rounded-full bg-primary transition-all"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-              </div>
-
-              {/* The Builder — replaces the placeholder */}
-              <div className="mt-6">
-                <TemplateBuilder />
-              </div>
-
-              <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground">
-                <Hammer className="h-3.5 w-3.5" aria-hidden="true" />
-                Templates are checked automatically before going live.
-              </div>
-            </div>
-          )}
-        </section>
-      </main>
-      <Footer />
-      <ScrollToTop />
-    </div>
-  );
-}
+              {/* Admin notice */}
+              {isAdmin && (
+                <p className="mt-3 flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm font-medium text-primary">
+                  <ShieldCheck className="h-4 w-4 shrink-0" aria-hidden="true" />
+                  Admin mode - you can
