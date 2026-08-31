@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 /**
  * CommunityTemplateCard - a template published by a creator.
