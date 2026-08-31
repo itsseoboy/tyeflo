@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import * as React from "react";
 import {
@@ -45,20 +45,21 @@ const SAMPLE_TEXTS = [
 ];
 
 const PREVIEW_FALLBACK = "Type something to start";
-const PAGE_SIZE = 12;
 
-// Font size range — 17 is the default (slightly larger for readability).
+// Performance tuning:
+//   INITIAL_ROWS — rendered on first paint. Small = fast hydration;
+//   the rest stream in via IntersectionObserver as the user scrolls.
+//   STEP_ROWS — how many more appear per scroll trigger.
+const INITIAL_ROWS = 6;
+const STEP_ROWS = 12;
+
 const FONT_SIZE_DEFAULT = 17;
 const FONT_SIZE_MIN = 10;
 const FONT_SIZE_MAX = 32;
 
-// sessionStorage keys — text + font size survive page navigation and
-// refreshes, and only clear when the tab closes or the user clears them.
 const STORAGE_KEY_TEXT = "tyeflo:input-text";
 const STORAGE_KEY_SIZE = "tyeflo:font-size";
 
-// Cache transformed strings by style + input. This avoids recalculating a style
-// when React re-renders for unrelated state changes (font size, clipboard, etc.).
 const TRANSFORM_CACHE = new WeakMap<FontStyle, Map<string, string>>();
 const MAX_CACHED_INPUTS_PER_STYLE = 24;
 
@@ -74,7 +75,6 @@ function getTransformedText(style: FontStyle, source: string): string {
 
   const transformed = style.transform(source);
 
-  // Keep the cache bounded so long-running sessions cannot grow memory forever.
   if (cache.size >= MAX_CACHED_INPUTS_PER_STYLE) {
     const oldest = cache.keys().next().value;
     if (oldest !== undefined) cache.delete(oldest);
@@ -97,7 +97,6 @@ const ICONS: Record<string, LucideIcon> = {
   CaseSensitive,
 };
 
-/** "Popular" is the homepage cluster — link it to "/" instead of a page. */
 function clusterHref(slug: string): string {
   return slug === "Popular" ? "/" : `/${slug}`;
 }
@@ -110,14 +109,11 @@ function CategoryIcon({ name, className }: { name: string; className?: string })
 export function FontTool({
   initialCluster = "Popular",
 }: {
-  /** Which cluster to show fonts for by default */
   initialCluster?: string;
 } = {}) {
-  // Internal state — wrapped below so every change is persisted.
   const [textState, setTextState] = React.useState("");
   const [fontSizeState, setFontSizeState] = React.useState(FONT_SIZE_DEFAULT);
 
-  // Restore persisted values once, after mount (client-side only).
   React.useEffect(() => {
     try {
       const storedText = window.sessionStorage.getItem(STORAGE_KEY_TEXT);
@@ -129,38 +125,36 @@ export function FontTool({
         if (Number.isFinite(parsed)) setFontSizeState(parsed);
       }
     } catch {
-      // sessionStorage unavailable (private mode etc.) — keep defaults.
+      /* storage unavailable */
     }
   }, []);
 
-  // setText: works like a normal setter, but also saves to storage.
   const setText = React.useCallback((value: React.SetStateAction<string>) => {
     setTextState((prev) => {
       const next = typeof value === "function" ? value(prev) : value;
       try {
         window.sessionStorage.setItem(STORAGE_KEY_TEXT, next);
       } catch {
-        // Storage write failed — the UI still updates normally.
+        /* ignore */
       }
       return next;
     });
   }, []);
 
-  // setFontSize: same idea, for the size slider and +/− buttons.
   const setFontSize = React.useCallback((value: React.SetStateAction<number>) => {
     setFontSizeState((prev) => {
       const next = typeof value === "function" ? value(prev) : value;
       try {
         window.sessionStorage.setItem(STORAGE_KEY_SIZE, String(next));
       } catch {
-        // Storage write failed — the UI still updates normally.
+        /* ignore */
       }
       return next;
     });
   }, []);
 
   const [activeCluster, setActiveCluster] = React.useState(initialCluster);
-  const [visibleCount, setVisibleCount] = React.useState(PAGE_SIZE);
+  const [visibleCount, setVisibleCount] = React.useState(INITIAL_ROWS);
   const [clipboard, setClipboard] = React.useState<string[]>([]);
   const [bulkCopied, setBulkCopied] = React.useState(false);
   const [recentlyCopied, setRecentlyCopied] = React.useState<
@@ -168,7 +162,32 @@ export function FontTool({
   >([]);
 
   React.useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
+    setVisibleCount(INITIAL_ROWS);
+  }, [activeCluster]);
+
+  /* ------------------------------------------------------------------ *
+   * Infinite scroll — a sentinel div at the bottom of the font list.
+   * When it enters the viewport, more rows render. Replaces the
+   * "Load More" button click with natural scrolling, and keeps initial
+   * hydration cheap (only INITIAL_ROWS rows exist on first paint).
+   * ------------------------------------------------------------------ */
+  const sentinelRef = React.useRef<HTMLDivElement | null>(null);
+
+  React.useEffect(() => {
+    const el = sentinelRef.current;
+    if (!el) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setVisibleCount((count) => count + STEP_ROWS);
+        }
+      },
+      { rootMargin: "600px 0px" } // start loading just before visible
+    );
+
+    observer.observe(el);
+    return () => observer.disconnect();
   }, [activeCluster]);
 
   const text = textState;
@@ -187,14 +206,9 @@ export function FontTool({
   const hasMore = visibleCount < styles.length;
 
   const cluster = getCluster(activeCluster);
-  const headingText = cluster
-    ? `${cluster.name} Fonts`
-    : "Popular Fonts";
+  const headingText = cluster ? `${cluster.name} Fonts` : "Popular Fonts";
 
   const source = text.trim() || PREVIEW_FALLBACK;
-
-  // Keep the text input responsive while the font previews update as a
-  // non-urgent render. This is especially helpful on slower mobile CPUs.
   const deferredSource = React.useDeferredValue(source);
 
   const transformedStyles = React.useMemo(
@@ -276,8 +290,6 @@ export function FontTool({
             maxLength={120}
             aria-label="Text to convert"
           />
-          {/* Buttons container — full height of the input row, contents
-              vertically centered so Inspire me lines up with the text. */}
           <div className="absolute inset-y-0 right-2 flex items-center justify-end gap-1.5">
             {text && (
               <Button
@@ -378,7 +390,6 @@ export function FontTool({
               })}
             </nav>
 
-            {/* Recently copied — new UX feature */}
             {recentlyCopied.length > 0 && (
               <div className="mt-6 rounded-xl border border-border bg-card p-3">
                 <p className="mb-2 flex items-center gap-1.5 px-1 text-xs font-bold uppercase tracking-wider text-muted-foreground">
@@ -525,13 +536,20 @@ export function FontTool({
             ))}
           </div>
 
+          {/* Infinite-scroll sentinel — starts loading 600px before
+              becoming visible, so rows always arrive in time. */}
+          {hasMore && (
+            <div ref={sentinelRef} className="h-1 w-full" aria-hidden="true" />
+          )}
+
+          {/* Fallback for no-JS/observer-failure edge cases */}
           {hasMore && (
             <div className="mt-6 flex justify-center">
               <Button
                 variant="outline"
                 size="lg"
                 className="rounded-full px-8"
-                onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                onClick={() => setVisibleCount((c) => c + STEP_ROWS)}
               >
                 Load More Fonts
               </Button>

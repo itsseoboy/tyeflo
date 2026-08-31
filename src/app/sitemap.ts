@@ -1,4 +1,4 @@
-import type { MetadataRoute } from "next";
+﻿import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = "https://tyeflo.com";
@@ -11,6 +11,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "daily",
       priority: 1,
     },
+    // Bio templates hub — new flagship page
+    {
+      url: `${baseUrl}/bio-templates`,
+      lastModified,
+      changeFrequency: "daily",
+      priority: 0.9,
+    },
     // 11 cluster keyword pages (Clusters 01-11)
     { url: `${baseUrl}/cursive-font-generator`, lastModified, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/cute-aesthetic-font-generator`, lastModified, changeFrequency: "weekly", priority: 0.9 },
@@ -22,9 +29,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/symbol-emoji-font-generator`, lastModified, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/small-bold-font-generator`, lastModified, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/seasonal-font-generator`, lastModified, changeFrequency: "weekly", priority: 0.9 },
-    // Bio templates page
-    { url: `${baseUrl}/bio-templates`, lastModified, changeFrequency: "weekly", priority: 0.9 },
-    // Legal pages
+    // Legal + support pages
     {
       url: `${baseUrl}/terms`,
       lastModified,
