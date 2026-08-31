@@ -1,10 +1,10 @@
-"use client";
+﻿"use client";
 
 /**
  * CommunityTemplateCard - a template published by a creator.
  *
  * Click the card to copy (same overlay animation as the generator).
- * Creator level badge sits top-left, report button top-right.
+ * Creator badge sits top-left, report button top-right.
  * Templates with 5+ reports are hidden automatically by the page query.
  */
 
@@ -27,6 +27,7 @@ export function CommunityTemplateCard({
   creatorName,
   creatorUsername,
   creatorPoints,
+  creatorRole,
 }: {
   templateId: string;
   label: string;
@@ -35,6 +36,7 @@ export function CommunityTemplateCard({
   creatorName: string | null;
   creatorUsername: string | null;
   creatorPoints: number;
+  creatorRole?: string | null;
 }) {
   const [copied, setCopied] = React.useState(false);
   const [reportState, setReportState] = React.useState<
@@ -85,11 +87,12 @@ export function CommunityTemplateCard({
       title="Click to copy"
       className="relative cursor-pointer select-none overflow-hidden rounded-2xl border border-border bg-card p-5 pt-10 text-center shadow-sm transition-shadow hover:shadow-md"
     >
-      {/* Creator badge - top left */}
+      {/* Creator badge - top left, role-aware */}
       <CreatorBadge
         username={creatorUsername}
         name={creatorName}
         points={creatorPoints}
+        role={creatorRole}
         className="absolute left-3 top-3"
       />
 

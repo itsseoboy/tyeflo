@@ -59,8 +59,6 @@ export default async function BioTemplatesPage() {
               Bio Templates
             </h1>
 
-            {/* Leads to Creator Lab - sign-in gate when logged out,
-                the dashboard + builder when logged in */}
             <Link
               href="/bio-templates/creator-lab"
               className="inline-flex items-center justify-center gap-2 rounded-full bg-primary px-6 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
@@ -162,6 +160,7 @@ export default async function BioTemplatesPage() {
                     creatorName={t.creator.name}
                     creatorUsername={t.creator.username}
                     creatorPoints={t.creator.points}
+                    creatorRole={t.creator.role}
                   />
                 ))}
               </div>
