@@ -156,26 +156,9 @@ export default async function CreatorLabPage() {
                 </p>
               )}
 
-              {/* Stats */}
-              <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                <div className="rounded-xl border border-border bg-card p-5 text-center">
-                  <p className="text-3xl font-bold text-primary">
-                    {user.points}
-                  </p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Creator Points
-                  </p>
-                </div>
-                <div className="rounded-xl border border-border bg-card p-5 text-center">
-                  <p className="flex items-center justify-center gap-2 text-3xl font-bold text-primary">
-                    <LevelIcon level={level} className="h-6 w-6" />
-                    Lv {level}
-                  </p>
-                  <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                    Current Level
-                  </p>
-                </div>
-                <div className="rounded-xl border border-border bg-card p-5 text-center">
+              {isAdmin ? (
+                /* ---------------- Admin view: no level clutter ---------------- */
+                <div className="mt-6 rounded-xl border border-border bg-card p-5 text-center">
                   <p className="text-3xl font-bold text-primary">
                     {creator!.templateCount}
                   </p>
@@ -183,25 +166,56 @@ export default async function CreatorLabPage() {
                     Templates Published
                   </p>
                 </div>
-              </div>
+              ) : (
+                /* ---------------- Creator view: stats + levels ---------------- */
+                <>
+                  <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div className="rounded-xl border border-border bg-card p-5 text-center">
+                      <p className="text-3xl font-bold text-primary">
+                        {user.points}
+                      </p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Creator Points
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-border bg-card p-5 text-center">
+                      <p className="flex items-center justify-center gap-2 text-3xl font-bold text-primary">
+                        <LevelIcon level={level} className="h-6 w-6" />
+                        Lv {level}
+                      </p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Current Level
+                      </p>
+                    </div>
+                    <div className="rounded-xl border border-border bg-card p-5 text-center">
+                      <p className="text-3xl font-bold text-primary">
+                        {creator!.templateCount}
+                      </p>
+                      <p className="mt-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                        Templates Published
+                      </p>
+                    </div>
+                  </div>
 
-              {/* Progress to next level */}
-              <div className="mt-6 rounded-xl border border-border bg-card p-5">
-                <div className="mb-2 flex items-center justify-between text-sm">
-                  <span className="font-semibold text-foreground">
-                    {nextAt !== null
-                      ? `${nextAt - user.points} points to Level ${level + 1}`
-                      : "Max level reached"}
-                  </span>
-                  <span className="text-muted-foreground">{progress}%</span>
-                </div>
-                <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
-                  <div
-                    className="h-full rounded-full bg-primary transition-all"
-                    style={{ width: `${progress}%` }}
-                  />
-                </div>
-              </div>
+                  {/* Progress to next level */}
+                  <div className="mt-6 rounded-xl border border-border bg-card p-5">
+                    <div className="mb-2 flex items-center justify-between text-sm">
+                      <span className="font-semibold text-foreground">
+                        {nextAt !== null
+                          ? `${nextAt - user.points} points to Level ${level + 1}`
+                          : "Max level reached"}
+                      </span>
+                      <span className="text-muted-foreground">{progress}%</span>
+                    </div>
+                    <div className="h-2.5 w-full overflow-hidden rounded-full bg-muted">
+                      <div
+                        className="h-full rounded-full bg-primary transition-all"
+                        style={{ width: `${progress}%` }}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
 
               {/* The Builder */}
               <div className="mt-6">
