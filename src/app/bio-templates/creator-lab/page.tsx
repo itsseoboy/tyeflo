@@ -1,4 +1,4 @@
-﻿import type { Metadata } from "next";
+import type { Metadata } from "next";
 import Link from "next/link";
 import { ArrowLeft, Sparkles, Hammer, ShieldCheck } from "lucide-react";
 import { Header } from "@/components/header";
@@ -148,13 +148,6 @@ export default async function CreatorLabPage() {
               </div>
 
               {/* Admin notice */}
-              {isAdmin && (
-                <p className="mt-3 flex items-center gap-2 rounded-xl border border-primary/30 bg-primary/10 px-4 py-2.5 text-sm font-medium text-primary">
-                  <ShieldCheck className="h-4 w-4 shrink-0" aria-hidden="true" />
-                  Admin mode - you can delete reported templates from the
-                  Supabase dashboard (Table Editor, Template table).
-                </p>
-              )}
 
               {isAdmin ? (
                 /* ---------------- Admin view: no level clutter ---------------- */

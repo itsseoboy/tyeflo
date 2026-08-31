@@ -965,7 +965,30 @@ export function SeoContentV2() {
             ))}
           </div>
         </article>
-
+        {/* -------------------------------------------------- *
+         * Image credits
+         * -------------------------------------------------- */}
+        <article id="image-credits" className="scroll-mt-24">
+          <SectionHeading
+            icon={Info}
+            eyebrow="Credits"
+            title="Image Credits"
+          />
+          <p className={PROSE}>
+            All illustrations and infographics on this page were created by
+            the TyeFlo team and are the property of TyeFlo. They may not be
+            reused, republished, or redistributed without written
+            permission. Where third-party assets are used in the future,
+            credits will be listed here. Questions about usage rights?{" "}
+            <a
+              href="/contact"
+              className="font-semibold text-primary underline underline-offset-4"
+            >
+              Contact us
+            </a>
+            .
+          </p>
+        </article>
         {/* -------------------------------------------------- *
          * 15. Conclusion
          * -------------------------------------------------- */}

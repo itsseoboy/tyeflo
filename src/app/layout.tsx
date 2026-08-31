@@ -1,4 +1,4 @@
-import { GoogleAnalytics } from "@next/third-parties/google";
+﻿import Script from "next/script";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
 import "./globals.css";
@@ -29,12 +29,14 @@ export const metadata: Metadata = {
     path: "/",
     keywords: SITE_KEYWORDS,
   }),
+  other: {
+    "dc.rights": "Copyright (c) 2026 TyeFlo. All rights reserved.",
+    "dc.creator": "TyeFlo",
+  },
 };
 
 /* ============================================================
    Rank Math equivalent — Homepage JSON-LD structured data
-   Includes: Organization, WebApplication, HowTo (steps),
-   ItemList (categories), BreadcrumbList, SoftwareApplication
    ============================================================ */
 
 const HOW_TO_STEPS = [
@@ -64,7 +66,6 @@ const HOW_TO_STEPS = [
     imageUrl: "/how-it-works-step-5.webp",
   },
 ];
-
 
 const CATEGORY_LIST = [
   {
@@ -124,9 +125,6 @@ const HOMEPAGE_BREADCRUMB = breadcrumbSchema([
   },
 ]);
 
-/* Image SEO — ImageObject schemas for each image on the homepage.
-   Helps Google Images index our infographics with proper context. */
-
 const HOMEPAGE_IMAGES = [
   {
     url: "/how-it-works-step-1.webp",
@@ -179,47 +177,43 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
-        {/* Rank Math equivalent: JSON-LD Structured Data */}
+        {/* Structured Data */}
         <script
-  type="application/ld+json"
-  dangerouslySetInnerHTML={{
-    __html: JSON.stringify({
-      "@context": "https://schema.org",
-      "@type": "WebSite",
-      "name": "TyeFlo",
-      "alternateName": "tyeflo.com",
-      "url": "https://www.tyeflo.com/"
-    }),
-  }}
-/>
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              "@context": "https://schema.org",
+              "@type": "WebSite",
+              name: "TyeFlo",
+              alternateName: "tyeflo.com",
+              url: "https://tyeflo.com",
+            }),
+          }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(ORGANIZATION_SCHEMA),
           }}
         />
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(WEBAPP_SCHEMA),
           }}
         />
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(HOMEPAGE_HOWTO),
           }}
         />
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
             __html: JSON.stringify(HOMEPAGE_ITEMLIST),
           }}
         />
-
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
@@ -227,7 +221,7 @@ export default function RootLayout({
           }}
         />
 
-        {/* Image SEO — one ImageObject schema per image on the homepage */}
+        {/* Image SEO — one ImageObject schema per homepage image */}
         {HOMEPAGE_IMAGES.map((img, i) => (
           <script
             key={i}
@@ -261,8 +255,23 @@ export default function RootLayout({
           <Toaster />
         </ThemeProvider>
 
-        {/* Google Analytics */}
-        <GoogleAnalytics gaId="G-RCWPPMHG23" />
+        {/* Google Analytics — lazy: loads AFTER first paint so the LCP
+            element never waits on the 165KB gtag script. Analytics still
+            records every visit; it just arrives a moment later. */}
+        <Script
+          src={`https://www.googletagmanager.com/gtag/js?id=G-RCWPPMHG23`}
+          strategy="lazyOnload"
+        />
+        <Script id="ga-init" strategy="lazyOnload">
+          {`
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', 'G-RCWPPMHG23', {
+              page_path: window.location.pathname,
+            });
+          `}
+        </Script>
       </body>
     </html>
   );

@@ -1,5 +1,6 @@
 import type { NextConfig } from "next";
 
+
 const nextConfig: NextConfig = {
   output: process.env.VERCEL ? undefined : "standalone",
   typescript: {
@@ -83,6 +84,12 @@ async redirects() {
   // Experimental: optimize package imports to reduce bundle size
   experimental: {
     optimizePackageImports: ["lucide-react"],
+    // Ship modern JS only - Lighthouse flagged legacy polyfills.
+    optimizeCss: true,
+  },
+  compiler: {
+    // Remove console.* in production for smaller output.
+    removeConsole: process.env.NODE_ENV === "production",
   },
 };
 
