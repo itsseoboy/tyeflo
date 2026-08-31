@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
-import { Menu } from "lucide-react";
+import { Menu, Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -15,9 +15,10 @@ import { ThemeToggle } from "@/components/theme-toggle";
 import { TyeFloLogo } from "@/components/tyeflo-logo";
 import { cn } from "@/lib/utils";
 
-/** Minimal anchor nav — only the font generator micro-niche. */
+/** Minimal anchor nav — font generator micro-niche + bio templates. */
 const NAV_LINKS = [
   { label: "Font Generator", href: "#tool" },
+  { label: "Bio Templates", href: "/bio-templates" },
   { label: "How it works", href: "#how-it-works" },
   { label: "Use cases", href: "#use-cases" },
   { label: "FAQ", href: "#faqs" },
@@ -97,6 +98,15 @@ export function Header() {
             ))}
           </nav>
 
+          {/* Creator button — top right (desktop) */}
+          <Link
+            href="/bio-templates/creator-lab"
+            className="hidden items-center gap-1.5 rounded-full border border-primary/30 bg-primary/10 px-4 py-2 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-primary-foreground md:flex"
+          >
+            <Wand2 className="h-4 w-4" aria-hidden="true" />
+            Creator
+          </Link>
+
           <ThemeToggle />
 
           {/* Mobile menu */}
@@ -132,6 +142,16 @@ export function Header() {
                     {link.label}
                   </Link>
                 ))}
+
+                {/* Creator — mobile */}
+                <Link
+                  href="/bio-templates/creator-lab"
+                  className="mt-3 flex items-center gap-2 rounded-lg bg-primary/10 px-3 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary hover:text-primary-foreground"
+                  onClick={() => setOpen(false)}
+                >
+                  <Wand2 className="h-4 w-4" aria-hidden="true" />
+                  Creator Lab
+                </Link>
               </nav>
             </SheetContent>
           </Sheet>

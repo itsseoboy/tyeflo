@@ -30,25 +30,30 @@ yarn-debug.log*
 yarn-error.log*
 .pnpm-debug.log*
 
-# env files (can opt-in for committing if needed)
+# env files — NEVER commit. Database passwords & keys live here.
 .env*
 
 # vercel
 .vercel
 
-
 # typescript
 *.tsbuildinfo
 next-env.d.ts
-local-*
+
+# local scratch files (root-level only, so future test folders aren't affected)
+/local-*
+/test
+/prompt
+
+# logs
+*.log
+
+# AI tool configs
 .claude
 .z-ai-config
-*.log
-dev.log
-dev.out.log
-test
-prompt
 
-server.log
 # Skills directory
 /skills/
+# local archives
+*.zip
+

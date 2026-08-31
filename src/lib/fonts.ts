@@ -1,7 +1,7 @@
 /**
  * Unicode Font Transformation Engine
  * ------------------------------------
- * Converts regular ASCII text into 80+ fancy Unicode "font" styles
+ * Converts regular ASCII text into 100+ fancy Unicode "font" styles
  * using mathematical alphanumeric symbols, enclosed alphanumerics,
  * combining diacritical marks, and other Unicode blocks.
  *
@@ -20,7 +20,8 @@ type FontCategory =
   | "Glitch"
   | "Symbol"
   | "Text Art"
-  | "Case Converter";
+  | "Case Converter"
+  | "Gaming";
 
 export interface FontStyle {
   id: string;
@@ -1012,10 +1013,55 @@ const sea = (t: string) => `࿐🌊🐋࿐࿐${t}࿐࿐🌊🐋࿐`;
 const weights = (t: string) => `❚█══${t}══█❚`;
 
 /* ------------------------------------------------------------------ *
+ * Gaming styles — decorative wraps popular in gamer tags & clan names
+ * ------------------------------------------------------------------ */
+
+const gamingRoyal = (t: string) => `꧁༺${t}༻꧂`;
+const gamingSkull = (t: string) => `꧁༒☬${bold(t)}☬༒꧂`;
+const gamingStar = (t: string) => `ミ★${t}★彡`;
+const gamingSniper = (t: string) => `▄︻デ${t}═━一`;
+const gamingEdge = (t: string) => `彡${t}彡`;
+const gamingBlades = (t: string) => `⚔${sansBold(t)}⚔`;
+const gamingCrown = (t: string) => `♛${boldFraktur(t)}♛`;
+const gamingCross = (t: string) => `×͜× ${t}`;
+
+/* ------------------------------------------------------------------ *
  * Full style registry
  * ------------------------------------------------------------------ */
 
 export const FONT_STYLES: FontStyle[] = [
+  // ---- Popular — best 2 from every category (20) ----
+  { id: "pop-circled", name: "Light Text Bubbles", category: "Popular", tag: "Circled", transform: circled },
+  { id: "pop-neg-squared", name: "Dark Text Bubbles", category: "Popular", tag: "Negative squared", transform: negativeSquared },
+  { id: "pop-bold-fraktur", name: "Fraktur Bold", category: "Popular", tag: "Bold gothic", transform: boldFraktur },
+  { id: "pop-double-struck", name: "Double Struck", category: "Popular", tag: "Hollow", transform: doubleStruck },
+  { id: "pop-bold-script", name: "Script Bold Italic", category: "Popular", tag: "Bold elegant", transform: boldScript },
+  { id: "pop-bold-italic", name: "Bold Italic", category: "Popular", tag: "Bold slanted", transform: boldItalic },
+  { id: "pop-small-caps", name: "Small Caps", category: "Popular", tag: "ᴛɪɴʏ ᴄᴀᴘs", transform: smallCaps },
+  { id: "pop-superscript", name: "Superscript", category: "Popular", tag: "Above line", transform: superscript },
+  { id: "pop-bold", name: "Bold Serif", category: "Popular", tag: "Strong", transform: bold },
+  { id: "pop-sans-bold", name: "Bold Sans", category: "Popular", tag: "Strong sans", transform: sansBold },
+  { id: "pop-glitch", name: "Glitch", category: "Popular", tag: "Mild chaos", transform: glitchMedium },
+  { id: "pop-glitch-max", name: "Glitch Max", category: "Popular", tag: "Heavy chaos", transform: glitchHeavy },
+  { id: "pop-strikethrough", name: "Strikethrough", category: "Popular", tag: "Crossed out", transform: strikethrough },
+  { id: "pop-hearts", name: "Hearts", category: "Popular", tag: "♥ wrapped", transform: hearts },
+  { id: "pop-wavy", name: "Wavy", category: "Popular", tag: "〰 flow", transform: wavy },
+  { id: "pop-boxed", name: "Box Frame", category: "Popular", tag: "╔ framed ╗", transform: boxed },
+  { id: "pop-alternating", name: "AlTeRnAtInG", category: "Popular", tag: "Mixed case", transform: alternatingCase },
+  { id: "pop-sarcastic", name: "SarCaStIc", category: "Popular", tag: "Spongebob", transform: sarcasticCase },
+  { id: "pop-gaming-royal", name: "Gaming Royal", category: "Popular", tag: "꧁༺ wrap ༻꧂", transform: gamingRoyal },
+  { id: "pop-gaming-skull", name: "Gaming Skull", category: "Popular", tag: "☬ clan tag ☬", transform: gamingSkull },
+
+  // ---- Gaming (8) ----
+  { id: "gaming-royal", name: "Gaming Royal", category: "Gaming", tag: "꧁༺ wrap ༻꧂", transform: gamingRoyal },
+  { id: "gaming-skull", name: "Gaming Skull", category: "Gaming", tag: "☬ clan tag ☬", transform: gamingSkull },
+  { id: "gaming-star", name: "Gaming Star", category: "Gaming", tag: "ミ★ ★彡", transform: gamingStar },
+  { id: "gaming-sniper", name: "Sniper Tag", category: "Gaming", tag: "▄︻デ ═━一", transform: gamingSniper },
+  { id: "gaming-edge", name: "Edge Tails", category: "Gaming", tag: "彡 tails 彡", transform: gamingEdge },
+  { id: "gaming-blades", name: "Blade Tag", category: "Gaming", tag: "⚔ bold ⚔", transform: gamingBlades },
+  { id: "gaming-crown", name: "Crowned Gothic", category: "Gaming", tag: "♛ fraktur ♛", transform: gamingCrown },
+  { id: "gaming-cross", name: "Cross Eyes", category: "Gaming", tag: "×͜× prefix", transform: gamingCross },
+
   // ---- Featured (shown first in "All" view) ----
   { id: "bold-fraktur", name: "Fraktur Bold", category: "Fancy", tag: "Bold gothic", transform: boldFraktur },
   { id: "double-struck", name: "Double Struck", category: "Fancy", tag: "Hollow", transform: doubleStruck },
@@ -1024,7 +1070,7 @@ export const FONT_STYLES: FontStyle[] = [
   { id: "bold-italic", name: "Bold Italic", category: "Cursive", tag: "Bold slanted", transform: boldItalic },
   { id: "fraktur", name: "Fraktur", category: "Fancy", tag: "Gothic", transform: fraktur },
 
-  // ---- Cool (12) ----
+  // ---- Cool ----
   { id: "circled", name: "Light Text Bubbles", category: "Cool", tag: "Circled", transform: circled },
   { id: "neg-squared", name: "Dark Text Bubbles", category: "Cool", tag: "Negative squared", transform: negativeSquared },
   { id: "fullwidth", name: "Full Width", category: "Cool", tag: "Wide", transform: fullwidth },
@@ -1037,7 +1083,7 @@ export const FONT_STYLES: FontStyle[] = [
   { id: "mirror", name: "Mirror", category: "Cool", tag: "|| reflection", transform: mirror },
   { id: "palindrome", name: "Reflective", category: "Cool", tag: "• reversed", transform: palindrome },
 
-  // ---- Fancy (remaining) ----
+  // ---- Fancy ----
   { id: "fraktur-strike", name: "Gothic Slash", category: "Fancy", tag: "Strikethrough", transform: frakturStrike },
   { id: "small-star", name: "Starred Fancy", category: "Fancy", tag: "⋆ starred", transform: smallStar },
   { id: "sparkle", name: "Sparkle Fancy", category: "Fancy", tag: "❋ sparkle", transform: sparkle },
@@ -1045,13 +1091,13 @@ export const FONT_STYLES: FontStyle[] = [
   { id: "flower3", name: "Floral Fancy", category: "Fancy", tag: "❁ flower", transform: flower3 },
   { id: "leaves", name: "Leaf Fancy", category: "Fancy", tag: "❦ leaves", transform: leaves },
 
-  // ---- Cursive (remaining) ----
+  // ---- Cursive ----
   { id: "script-underline", name: "Script Lined", category: "Cursive", tag: "Underlined", transform: scriptUnderline },
   { id: "italic-underline", name: "Italic Lined", category: "Cursive", tag: "Underlined", transform: italicUnderline },
   { id: "flower", name: "Floral Script", category: "Cursive", tag: "❀ wrapped", transform: flower },
   { id: "flower2", name: "Bloom Script", category: "Cursive", tag: "✿ wrapped", transform: flower2 },
 
-  // ---- Small (8) ----
+  // ---- Small ----
   { id: "sans-serif", name: "Math Sans", category: "Small", tag: "Sans serif", transform: sansSerif },
   { id: "subscript", name: "Subscript", category: "Small", tag: "Below line", transform: subscript },
   { id: "superscript", name: "Superscript", category: "Small", tag: "Above line", transform: superscript },
@@ -1059,14 +1105,14 @@ export const FONT_STYLES: FontStyle[] = [
   { id: "dot-below", name: "Tiny Dots", category: "Small", tag: "Below marks", transform: dotBelow },
   { id: "dot-above", name: "Star Dot", category: "Small", tag: "Above marks", transform: dotAbove },
 
-  // ---- Bold (6) ----
+  // ---- Bold ----
   { id: "bold", name: "Bold Serif", category: "Bold", tag: "Strong", transform: bold },
   { id: "sans-bold", name: "Bold Sans", category: "Bold", tag: "Strong sans", transform: sansBold },
   { id: "bold-underline", name: "Bold Lined", category: "Bold", tag: "Underlined", transform: boldUnderline },
   { id: "bold-strike", name: "Bold Strike", category: "Bold", tag: "Crossed out", transform: boldStrike },
   { id: "black-square", name: "Black Square", category: "Bold", tag: "■ strong", transform: blackSquare },
 
-  // ---- Glitch (10) ----
+  // ---- Glitch ----
   { id: "glitch-light", name: "Glitch Lite", category: "Glitch", tag: "Subtle effect", transform: glitchLight },
   { id: "glitch-medium", name: "Glitch", category: "Glitch", tag: "Mild chaos", transform: glitchMedium },
   { id: "glitch-heavy", name: "Glitch Max", category: "Glitch", tag: "Heavy chaos", transform: glitchHeavy },
@@ -1077,7 +1123,7 @@ export const FONT_STYLES: FontStyle[] = [
   { id: "glitch-bubble", name: "Bubble Glitch", category: "Glitch", tag: "○ circled", transform: glitchBubble },
   { id: "glitch-keycap", name: "Keycap Glitch", category: "Glitch", tag: "⃠ boxed", transform: glitchKeycap },
 
-  // ---- Symbol (18) ----
+  // ---- Symbol ----
   { id: "strikethrough", name: "Strikethrough", category: "Symbol", tag: "Crossed out", transform: strikethrough },
   { id: "underline", name: "Underline", category: "Symbol", tag: "Underlined", transform: underline },
   { id: "slash", name: "Slashed", category: "Symbol", tag: "Slash mark", transform: slashThrough },
@@ -1097,7 +1143,7 @@ export const FONT_STYLES: FontStyle[] = [
   { id: "tilde-overlay", name: "Tilde Slash", category: "Symbol", tag: "∼ overlay", transform: tildeOverlay },
   { id: "long-stroke", name: "Long Slash", category: "Symbol", tag: "― stroke", transform: longStroke },
 
-  // ---- Text Art (20) ----
+  // ---- Text Art ----
   { id: "wavy", name: "Wavy", category: "Text Art", tag: "〰 flow", transform: wavy },
   { id: "banner", name: "Banner", category: "Text Art", tag: "▞ striped", transform: banner },
   { id: "boxed", name: "Box Frame", category: "Text Art", tag: "╔ framed ╗", transform: boxed },
@@ -1156,7 +1202,7 @@ export const FONT_STYLES: FontStyle[] = [
   { id: "lefthanded", name: "Lefthanded", category: "Fancy", tag: "Mirror", transform: lefthanded },
   { id: "manuscript", name: "Manuscript", category: "Fancy", tag: "✍ Fraktur", transform: (t) => boldFraktur(t) + "✍" },
 
-  // ---- Cool additions: exotic Unicode substitutions (21) ----
+  // ---- Cool additions: exotic Unicode substitutions ----
   { id: "light-squares", name: "Light Text Squares", category: "Cool", tag: "Squared", transform: squared },
   { id: "cyrillic", name: "Cyrillic", category: "Cool", tag: "Russian", transform: cyrillic },
   { id: "japanese", name: "Japanese", category: "Cool", tag: "Kana", transform: japanese },
@@ -1171,7 +1217,7 @@ export const FONT_STYLES: FontStyle[] = [
   { id: "mixed-style-2", name: "Mixed Style 2", category: "Cool", tag: "Mixed", transform: (t) => t.split("").map((c, i) => i % 2 === 0 ? circled(c) : sansSerif(c)).join("") },
   { id: "mixed-style-3", name: "Mixed Style 3", category: "Cool", tag: "Mixed", transform: (t) => t.split("").map((c, i) => i % 4 === 0 ? doubleStruck(c) : i % 4 === 1 ? bold(c) : c).join("") },
 
-  // ---- Glitch additions: combining marks + exotic substitutions (44) ----
+  // ---- Glitch additions: combining marks + exotic substitutions ----
   { id: "fairytale", name: "Fairytale", category: "Glitch", tag: "Cherokee", transform: cherokee },
   { id: "diagonal-strikes", name: "Diagonal Strikes", category: "Glitch", tag: "Slash marks", transform: diagonalStrikes },
   { id: "acute-accents", name: "Acute Accents", category: "Glitch", tag: "Acute", transform: (t) => combineWith(t, "\u0301") },
@@ -1223,6 +1269,7 @@ export const FONT_CATEGORIES: ("Popular" | FontCategory)[] = [
   "Symbol",
   "Text Art",
   "Case Converter",
+  "Gaming",
 ];
 
 /** Lucide icon name for each category — used in the UI pills. */
@@ -1237,6 +1284,7 @@ export const CATEGORY_ICONS: Record<string, string> = {
   Symbol: "Sparkles",
   "Text Art": "Type",
   "Case Converter": "CaseSensitive",
+  Gaming: "Bold",
 };
 
 /** IDs of the 20 best/most popular fonts shown on the homepage "Popular" tab. */
@@ -1260,13 +1308,13 @@ export const POPULAR_FONT_IDS: string[] = [
   "strikethrough",
   "underline",
   "hearts",
-  "flip",
+  "mirrored-flipped",
   "currencies",
   "neg-circled",
 ];
 
 // Precomputed lookups keep the client from rebuilding Maps/filtering the
-// complete 80+ style list every time the tool renders.
+// complete 100+ style list every time the tool renders.
 const FONT_STYLE_BY_ID = new Map(FONT_STYLES.map((style) => [style.id, style]));
 
 const FONT_STYLES_BY_CATEGORY = new Map<FontCategory, FontStyle[]>();
@@ -1286,9 +1334,9 @@ export function getStylesByCategory(category: "Popular" | FontCategory): FontSty
 }
 
 /* ------------------------------------------------------------------ *
- * CLUSTERS — 11 keyword clusters that replace the old font categories
- * in the sidebar. Each cluster maps to a subset of FONT_STYLES based
- * on the underlying font categories that best match its vibe.
+ * CLUSTERS — keyword clusters shown in the tool sidebar. Each cluster
+ * maps to a subset of FONT_STYLES based on the underlying font
+ * categories that best match its vibe.
  * ------------------------------------------------------------------ */
 
 export interface FontCluster {
@@ -1310,12 +1358,12 @@ export interface FontCluster {
 
 export const FONT_CLUSTERS: FontCluster[] = [
   {
-    slug: "font-generator-copy-and-paste",
+    slug: "Popular",
     name: "Popular",
     shortName: "Popular",
     icon: "Flame",
-    description: "The 20 most-used fonts across every category.",
-    fontIds: POPULAR_FONT_IDS,
+    description: "The most-loved fonts across every category.",
+    categories: ["Popular"],
   },
   {
     slug: "cursive-font-generator",
@@ -1363,7 +1411,7 @@ export const FONT_CLUSTERS: FontCluster[] = [
     shortName: "Gaming",
     icon: "Bold",
     description: "Discord, Minecraft, Roblox, and gamer tag fonts.",
-    categories: ["Glitch", "Cool"],
+    categories: ["Gaming", "Glitch"],
   },
   {
     slug: "instagram-font-generator",
@@ -1400,7 +1448,9 @@ export const FONT_CLUSTERS: FontCluster[] = [
 ];
 
 // Precompute cluster lookups once at module initialization.
-const FONT_CLUSTER_BY_SLUG = new Map(FONT_CLUSTERS.map((cluster) => [cluster.slug, cluster]));
+const FONT_CLUSTER_BY_SLUG = new Map(
+  FONT_CLUSTERS.map((cluster) => [cluster.slug, cluster])
+);
 
 const FONT_STYLES_BY_CLUSTER = new Map<string, FontStyle[]>();
 for (const cluster of FONT_CLUSTERS) {

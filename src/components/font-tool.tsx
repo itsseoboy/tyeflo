@@ -47,6 +47,16 @@ const SAMPLE_TEXTS = [
 const PREVIEW_FALLBACK = "Type something to start";
 const PAGE_SIZE = 12;
 
+// Font size range — 17 is the default (slightly larger for readability).
+const FONT_SIZE_DEFAULT = 17;
+const FONT_SIZE_MIN = 10;
+const FONT_SIZE_MAX = 32;
+
+// sessionStorage keys — text + font size survive page navigation and
+// refreshes, and only clear when the tab closes or the user clears them.
+const STORAGE_KEY_TEXT = "tyeflo:input-text";
+const STORAGE_KEY_SIZE = "tyeflo:font-size";
+
 // Cache transformed strings by style + input. This avoids recalculating a style
 // when React re-renders for unrelated state changes (font size, clipboard, etc.).
 const TRANSFORM_CACHE = new WeakMap<FontStyle, Map<string, string>>();
@@ -87,23 +97,72 @@ const ICONS: Record<string, LucideIcon> = {
   CaseSensitive,
 };
 
+/** "Popular" is the homepage cluster — link it to "/" instead of a page. */
+function clusterHref(slug: string): string {
+  return slug === "Popular" ? "/" : `/${slug}`;
+}
+
 function CategoryIcon({ name, className }: { name: string; className?: string }) {
   const Icon = ICONS[name] ?? Flame;
   return <Icon className={className} />;
 }
 
 export function FontTool({
-  initialCluster = "font-generator-copy-and-paste",
+  initialCluster = "Popular",
 }: {
   /** Which cluster to show fonts for by default */
   initialCluster?: string;
 } = {}) {
-  const [text, setText] = React.useState("");
+  // Internal state — wrapped below so every change is persisted.
+  const [textState, setTextState] = React.useState("");
+  const [fontSizeState, setFontSizeState] = React.useState(FONT_SIZE_DEFAULT);
+
+  // Restore persisted values once, after mount (client-side only).
+  React.useEffect(() => {
+    try {
+      const storedText = window.sessionStorage.getItem(STORAGE_KEY_TEXT);
+      if (storedText !== null) setTextState(storedText);
+
+      const storedSize = window.sessionStorage.getItem(STORAGE_KEY_SIZE);
+      if (storedSize !== null) {
+        const parsed = Number(storedSize);
+        if (Number.isFinite(parsed)) setFontSizeState(parsed);
+      }
+    } catch {
+      // sessionStorage unavailable (private mode etc.) — keep defaults.
+    }
+  }, []);
+
+  // setText: works like a normal setter, but also saves to storage.
+  const setText = React.useCallback((value: React.SetStateAction<string>) => {
+    setTextState((prev) => {
+      const next = typeof value === "function" ? value(prev) : value;
+      try {
+        window.sessionStorage.setItem(STORAGE_KEY_TEXT, next);
+      } catch {
+        // Storage write failed — the UI still updates normally.
+      }
+      return next;
+    });
+  }, []);
+
+  // setFontSize: same idea, for the size slider and +/− buttons.
+  const setFontSize = React.useCallback((value: React.SetStateAction<number>) => {
+    setFontSizeState((prev) => {
+      const next = typeof value === "function" ? value(prev) : value;
+      try {
+        window.sessionStorage.setItem(STORAGE_KEY_SIZE, String(next));
+      } catch {
+        // Storage write failed — the UI still updates normally.
+      }
+      return next;
+    });
+  }, []);
+
   const [activeCluster, setActiveCluster] = React.useState(initialCluster);
   const [visibleCount, setVisibleCount] = React.useState(PAGE_SIZE);
   const [clipboard, setClipboard] = React.useState<string[]>([]);
   const [bulkCopied, setBulkCopied] = React.useState(false);
-  const [fontSize, setFontSize] = React.useState(15);
   const [recentlyCopied, setRecentlyCopied] = React.useState<
     { name: string; value: string }[]
   >([]);
@@ -112,24 +171,27 @@ export function FontTool({
     setVisibleCount(PAGE_SIZE);
   }, [activeCluster]);
 
- const styles: FontStyle[] = React.useMemo(
-  () => getStylesByCluster(activeCluster),
-  [activeCluster]
-);
+  const text = textState;
+  const fontSize = fontSizeState;
 
-const visibleStyles = React.useMemo(
-  () => styles.slice(0, visibleCount),
-  [styles, visibleCount]
-);
+  const styles: FontStyle[] = React.useMemo(
+    () => getStylesByCluster(activeCluster),
+    [activeCluster]
+  );
 
-const hasMore = visibleCount < styles.length;
+  const visibleStyles = React.useMemo(
+    () => styles.slice(0, visibleCount),
+    [styles, visibleCount]
+  );
 
-const cluster = getCluster(activeCluster);
-const headingText = cluster
-  ? `${cluster.name} Fonts`
-  : "Popular Fonts";
+  const hasMore = visibleCount < styles.length;
 
-const source = text.trim() || PREVIEW_FALLBACK;
+  const cluster = getCluster(activeCluster);
+  const headingText = cluster
+    ? `${cluster.name} Fonts`
+    : "Popular Fonts";
+
+  const source = text.trim() || PREVIEW_FALLBACK;
 
   // Keep the text input responsive while the font previews update as a
   // non-urgent render. This is especially helpful on slower mobile CPUs.
@@ -143,6 +205,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
       })),
     [visibleStyles, deferredSource]
   );
+
   const handleInspire = () => {
     const pick = SAMPLE_TEXTS[Math.floor(Math.random() * SAMPLE_TEXTS.length)];
     setText(pick);
@@ -175,7 +238,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
     return (
       <a
         key={c.slug}
-        href={`/${c.slug}`}
+        href={clusterHref(c.slug)}
         className={cn(
           "flex shrink-0 items-center gap-1.5 rounded-full border px-3.5 py-1.5 text-sm font-medium transition-all",
           isActive
@@ -213,7 +276,9 @@ const source = text.trim() || PREVIEW_FALLBACK;
             maxLength={120}
             aria-label="Text to convert"
           />
-          <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-1.5">
+          {/* Buttons container — full height of the input row, contents
+              vertically centered so Inspire me lines up with the text. */}
+          <div className="absolute inset-y-0 right-2 flex items-center justify-end gap-1.5">
             {text && (
               <Button
                 variant="ghost"
@@ -230,14 +295,11 @@ const source = text.trim() || PREVIEW_FALLBACK;
               variant="ghost"
               size="sm"
               onClick={handleInspire}
-              className="rounded-full text-muted-foreground hover:bg-accent hover:text-primary"
+              className="h-8 rounded-full px-2 text-muted-foreground hover:bg-accent hover:text-primary"
               aria-label="Inspire me"
               title="Inspire me"
             >
-              <Wand2
-                className="h-4 w-4 sm:mr-1.5"
-                aria-hidden="true"
-              />
+              <Wand2 className="h-4 w-4" aria-hidden="true" />
               <span className="hidden sm:inline">Inspire me</span>
             </Button>
           </div>
@@ -246,7 +308,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setFontSize((s) => Math.max(10, s - 1))}
+              onClick={() => setFontSize((s) => Math.max(FONT_SIZE_MIN, s - 1))}
               className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
               aria-label="Decrease font size"
               title="Decrease font size"
@@ -255,8 +317,8 @@ const source = text.trim() || PREVIEW_FALLBACK;
             </Button>
             <input
               type="range"
-              min={10}
-              max={32}
+              min={FONT_SIZE_MIN}
+              max={FONT_SIZE_MAX}
               value={fontSize}
               onChange={(e) => setFontSize(Number(e.target.value))}
               className="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-border accent-[var(--primary)]"
@@ -265,7 +327,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
             <Button
               variant="ghost"
               size="icon"
-              onClick={() => setFontSize((s) => Math.min(32, s + 1))}
+              onClick={() => setFontSize((s) => Math.min(FONT_SIZE_MAX, s + 1))}
               className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
               aria-label="Increase font size"
               title="Increase font size"
@@ -290,7 +352,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
                 return (
                   <a
                     key={c.slug}
-                    href={`/${c.slug}`}
+                    href={clusterHref(c.slug)}
                     className={cn(
                       "flex w-full items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors",
                       isActive
@@ -353,7 +415,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
                 maxLength={120}
                 aria-label="Text to convert"
               />
-              <div className="absolute right-2 top-1/2 flex -translate-y-1/2 items-center gap-1.5">
+              <div className="absolute inset-y-0 right-2 flex items-center justify-end gap-1.5">
                 {text && (
                   <span className="text-xs tabular-nums text-muted-foreground" aria-live="polite">
                     {text.length}/120
@@ -374,7 +436,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
                   variant="ghost"
                   size="sm"
                   onClick={handleInspire}
-                  className="rounded-full text-muted-foreground hover:bg-accent hover:text-primary"
+                  className="h-9 rounded-full text-muted-foreground hover:bg-accent hover:text-primary"
                   aria-label="Inspire me"
                   title="Inspire me"
                 >
@@ -387,7 +449,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setFontSize((s) => Math.max(10, s - 1))}
+                onClick={() => setFontSize((s) => Math.max(FONT_SIZE_MIN, s - 1))}
                 className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
                 aria-label="Decrease font size"
               >
@@ -395,8 +457,8 @@ const source = text.trim() || PREVIEW_FALLBACK;
               </Button>
               <input
                 type="range"
-                min={10}
-                max={32}
+                min={FONT_SIZE_MIN}
+                max={FONT_SIZE_MAX}
                 value={fontSize}
                 onChange={(e) => setFontSize(Number(e.target.value))}
                 className="h-2 flex-1 cursor-pointer appearance-none rounded-full bg-border accent-[var(--primary)]"
@@ -405,7 +467,7 @@ const source = text.trim() || PREVIEW_FALLBACK;
               <Button
                 variant="ghost"
                 size="icon"
-                onClick={() => setFontSize((s) => Math.min(32, s + 1))}
+                onClick={() => setFontSize((s) => Math.min(FONT_SIZE_MAX, s + 1))}
                 className="h-8 w-8 shrink-0 rounded-full text-muted-foreground hover:bg-accent hover:text-foreground"
                 aria-label="Increase font size"
               >
@@ -416,9 +478,9 @@ const source = text.trim() || PREVIEW_FALLBACK;
 
           {/* Mobile category pills */}
           <nav
-  className="mx-4 mb-4 flex items-center gap-2 overflow-x-auto px-4 pb-2 ..."
-  aria-label="Font categories"
->
+            className="mx-4 mb-4 flex items-center gap-2 overflow-x-auto px-4 pb-2"
+            aria-label="Font categories"
+          >
             {FONT_CLUSTERS.map(renderCategoryPill)}
             <button
               className="flex shrink-0 items-center justify-center rounded-full border border-border bg-card p-2 text-muted-foreground transition-colors hover:border-primary/40 hover:text-foreground"
@@ -452,15 +514,15 @@ const source = text.trim() || PREVIEW_FALLBACK;
           {/* Font rows */}
           <div className="space-y-1.5">
             {transformedStyles.map(({ style, styled }) => (
-  <FontRow
-    key={style.id}
-    name={style.name}
-    category={style.category}
-    styled={styled}
-    onCopy={() => copyText(styled, style.name)}
-    fontSize={fontSize}
-  />
-))}
+              <FontRow
+                key={style.id}
+                name={style.name}
+                category={style.category}
+                styled={styled}
+                onCopy={() => copyText(styled, style.name)}
+                fontSize={fontSize}
+              />
+            ))}
           </div>
 
           {hasMore && (

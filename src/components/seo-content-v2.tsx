@@ -7,7 +7,8 @@
  * Found a Font, About, FAQs, Conclusion) all in one place.
  *
  * BioTemplateCard (used inside the Bio Templates section) is a client
- * component imported from "./bio-templates".
+ * component imported from "./bio-templates". Template data lives in
+ * "@/data/bio-templates" and is shared with the /bio-templates page.
  */
 
 import {
@@ -37,7 +38,9 @@ import {
   CaseSensitive,
 } from "lucide-react";
 import type { ComponentType, ReactNode } from "react";
+import Link from "next/link";
 import { BioTemplateCard } from "./bio-templates";
+import { HOMEPAGE_BIO_TEMPLATES } from "@/data/bio-templates";
 import { loadHomepageSection } from "@/lib/mdx-loader";
 
 /* ------------------------------------------------------------------ *
@@ -176,7 +179,7 @@ const FEATURES: string[] = [
   "No sign-in required — open the page and start typing instantly.",
   "Always free, with no hidden plan, no watermark, and no daily limit.",
   "Friendly, distraction-free UI built for fast browsing on any device.",
-  "Privacy first — nothing you type is stored on our servers.",
+  "Privacy first: the text you type in the generator never leaves your device.",
   "Simple, fast, and easy to use — no learning curve.",
   "Unicode-based styles compatible with almost every modern device and app.",
   "Largest collection — 200+ styles across 11 curated categories.",
@@ -185,63 +188,6 @@ const FEATURES: string[] = [
   "Simple and instant copy-paste-share — no download, no install.",
   "Categories to help you find the best font for your specific vibe.",
   "Mobile-friendly preview that adapts to any screen size, phone or desktop.",
-];
-
-const BIO_TEMPLATES: { label: string; lines: string[] }[] = [
-  {
-    label: "Aesthetic Instagram",
-    lines: [
-      "𝓼𝓸𝓯𝓽 𝓮𝓻𝓪 ⋆˙",
-      "🌿 plant mom | ☕ coffee",
-      "⟡ living slowly on purpose",
-      "📷 @yourhandle",
-    ],
-  },
-  {
-    label: "Gaming Tag",
-    lines: [
-      "꧁༒☬Ɖř₳ǤøƝ☬༒꧂",
-      "🎮 Free Fire • PUBG • Valorant",
-      "⚔️ Rank: Mythic",
-      "💬 DM for duo queue",
-    ],
-  },
-  {
-    label: "Cute / Kawaii",
-    lines: [
-      "(｡･ω･｡)ﾉ♡",
-      "🍓 small & sweet",
-      "☁️ daydream collector",
-      "✨ be kind, be cozy",
-    ],
-  },
-  {
-    label: "LinkedIn Bio",
-    lines: [
-      "𝗦𝗲𝗻𝗶𝗼𝗿 𝗣𝗿𝗼𝗱𝘂𝗰𝘁 𝗗𝗲𝘀𝗶𝗴𝗻𝗲𝗿",
-      "Building tools people love.",
-      "🚀 ex-Startup • ex-BigTech",
-      "📍 Bengaluru · she/her",
-    ],
-  },
-  {
-    label: "Glitch / Discord",
-    lines: [
-      "Ẓ̴̐a̸̢̎l̷̺͝g̵͎͗ò̴̧ ̵̰̽M̸̟̎o̴̙̿d̸̰̉e̸̦̎",
-      "💿 404: bio not found",
-      "⚡ night owl + glitch head",
-      "🗡️ prefers dark mode",
-    ],
-  },
-  {
-    label: "Small / Minimal",
-    lines: [
-      "ᴛɪɴʏ ʙᴜᴛ ᴍɪɢʜᴛʏ",
-      "• reader • walker • tea",
-      "· keeping it simple",
-      "· @tinyhandle",
-    ],
-  },
 ];
 
 const CATEGORIES: {
@@ -417,7 +363,7 @@ const FAQS: { q: string; a: string }[] = [
   },
   {
     q: "Is anything I type stored or sent to your servers?",
-    a: "No. Everything you type is transformed live in your browser using JavaScript — your text never leaves your device. We don't store what you type, and we don't track individual font copies. The only thing our servers see is the standard page request, the same as any website. Privacy first, always.",
+    a: "The generator itself is fully private: everything you type is transformed live in your browser, and your text never leaves your device. We do not store generator input, and we do not track individual font copies. The only things we store are what you deliberately create as a signed-in creator: your username, your published templates, and your creator points — that is what powers the community templates section. Privacy first, always.",
   },
 ];
 
@@ -670,17 +616,28 @@ export function SeoContentV2() {
           />
           <p className={PROSE}>
             Need inspiration for your next bio? Start with one of these
-            ready-made templates — each is a single tap to copy. Tweak the
-            lines after pasting to make them yours.
+            ready-made templates — click a card to copy it instantly, or tap
+            the pencil icon to edit each line first (the font stays the same).
+            Nothing is saved, so templates always reset to their defaults.
           </p>
           <div className="mt-8 grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {BIO_TEMPLATES.map((t) => (
+            {HOMEPAGE_BIO_TEMPLATES.map((t) => (
               <BioTemplateCard
                 key={t.label}
                 label={t.label}
                 lines={t.lines}
+                styles={t.styles}
               />
             ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Link
+              href="/bio-templates"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3 text-sm font-semibold text-primary-foreground shadow-sm transition hover:bg-primary/90"
+            >
+              See More Templates
+              <ArrowRight className="h-4 w-4" />
+            </Link>
           </div>
         </article>
 

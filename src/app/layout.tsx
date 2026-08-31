@@ -68,10 +68,6 @@ const HOW_TO_STEPS = [
 
 const CATEGORY_LIST = [
   {
-    name: "Font Generator — Copy & Paste",
-    url: "https://tyeflo.com/font-generator-copy-and-paste",
-  },
-  {
     name: "Cursive Font Generator",
     url: "https://tyeflo.com/cursive-font-generator",
   },

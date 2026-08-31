@@ -6,26 +6,37 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")   // pooled — used by the app at runtime
+  directUrl = env("DIRECT_URL")     // direct — used by prisma db push
 }
 
+// App users. `id` is the Supabase auth user id (UUID) — Supabase owns
+// the login flow (auth.users); this table stores OUR data: username,
+// points and templates.
 model User {
-  id        String   @id @default(cuid())
-  email     String   @unique
+  id        String     @id
+  email     String     @unique
+  username  String?    @unique
   name      String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  image     String?
+  points    Int        @default(0)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  templates Template[]
 }
 
-model Post {
+model Template {
   id        String   @id @default(cuid())
-  title     String
-  content   String?
-  published Boolean  @default(false)
-  authorId  String
+  label     String
+  lines     String[]
+  styles    String[]
+  creatorId String
+  creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
+  reported  Int      @default(0)
   createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+
+  @@index([creatorId])
 }
 
 // Fonts that users have starred/saved while using the generator.

@@ -12,7 +12,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     // 11 cluster keyword pages (Clusters 01-11)
-    { url: `${baseUrl}/font-generator-copy-and-paste`, lastModified, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/cursive-font-generator`, lastModified, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/cute-aesthetic-font-generator`, lastModified, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/fancy-cool-font-generator`, lastModified, changeFrequency: "weekly", priority: 0.9 },
@@ -23,6 +22,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${baseUrl}/symbol-emoji-font-generator`, lastModified, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/small-bold-font-generator`, lastModified, changeFrequency: "weekly", priority: 0.9 },
     { url: `${baseUrl}/seasonal-font-generator`, lastModified, changeFrequency: "weekly", priority: 0.9 },
+    // Bio templates page
+    { url: `${baseUrl}/bio-templates`, lastModified, changeFrequency: "weekly", priority: 0.9 },
     // Legal pages
     {
       url: `${baseUrl}/terms`,

@@ -10,24 +10,29 @@ const nextConfig: NextConfig = {
   // Disable the Next.js dev indicator ("N" logo) in the bottom-left corner
   devIndicators: false,
   // HTTP → HTTPS redirect in production
-  async redirects() {
-    return process.env.NODE_ENV === "production"
-      ? [
-          {
-            source: "/:path*",
-            has: [
-              {
-                type: "header",
-                key: "x-forwarded-proto",
-                value: "http",
-              },
-            ],
-            destination: "https://tyeflo.com/:path*",
-            permanent: true,
-          },
-        ]
-      : [];
-  },
+async redirects() {
+  return process.env.NODE_ENV === "production"
+    ? [
+        {
+          source: "/font-generator-copy-and-paste",
+          destination: "/",
+          permanent: true,
+        },
+        {
+          source: "/:path*",
+          has: [
+            {
+              type: "header",
+              key: "x-forwarded-proto",
+              value: "http",
+            },
+          ],
+          destination: "https://tyeflo.com/:path*",
+          permanent: true,
+        },
+      ]
+    : [];
+},
   async headers() {
     return [
       {
