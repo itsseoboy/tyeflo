@@ -8,7 +8,7 @@
  *
  * BioTemplateCard (used inside the Bio Templates section) is a client
  * component imported from "./bio-templates". Template data lives in
- * "@/data/bio-templates" and is shared with the /bio-templates page.
+ * "@/data/bio-templates" & is shared with the /bio-templates page.
  */
 
 import {
