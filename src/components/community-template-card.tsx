@@ -2,14 +2,12 @@
 
 /**
  * CommunityTemplateCard - a template published by a creator.
- *
- * Click the card to copy (same overlay animation as the generator).
- * Creator badge sits top-left, report button top-right.
- * Templates with 5+ reports are hidden automatically by the page query.
+ * Click to copy (counts server-side), badge top-left, report top-right,
+ * copy count shown under the label.
  */
 
 import * as React from "react";
-import { Check, Flag } from "lucide-react";
+import { Check, Flag, Copy } from "lucide-react";
 import { FONT_STYLES } from "@/lib/fonts";
 import { CreatorBadge } from "@/components/creator-badge";
 
@@ -28,6 +26,7 @@ export function CommunityTemplateCard({
   creatorUsername,
   creatorPoints,
   creatorRole,
+  copies,
 }: {
   templateId: string;
   label: string;
@@ -37,8 +36,10 @@ export function CommunityTemplateCard({
   creatorUsername: string | null;
   creatorPoints: number;
   creatorRole?: string | null;
+  copies: number;
 }) {
   const [copied, setCopied] = React.useState(false);
+  const [localCopies, setLocalCopies] = React.useState(copies);
   const [reportState, setReportState] = React.useState<
     "idle" | "sending" | "done"
   >("idle");
@@ -52,7 +53,15 @@ export function CommunityTemplateCard({
     try {
       await navigator.clipboard.writeText(styledLines.join("\n"));
       setCopied(true);
+      setLocalCopies((c) => c + 1);
       window.setTimeout(() => setCopied(false), 1500);
+
+      // Fire-and-forget analytics.
+      fetch("/api/templates/copied", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ templateId }),
+      }).catch(() => {});
     } catch {
       /* clipboard unavailable */
     }
@@ -68,7 +77,6 @@ export function CommunityTemplateCard({
       });
 
       if (res.status === 401) {
-        // Sign-in needed - take them to the Creator Lab gate.
         window.location.href = "/bio-templates/creator-lab";
         return;
       }
@@ -76,7 +84,6 @@ export function CommunityTemplateCard({
       if (!res.ok) throw new Error("failed");
       setReportState("done");
     } catch {
-      // Allow retry on failure.
       setReportState("idle");
     }
   };
@@ -128,8 +135,14 @@ export function CommunityTemplateCard({
         ))}
       </div>
 
-      <p className="mt-4 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
+      <p className="mt-4 flex items-center justify-center gap-2 text-xs font-semibold uppercase tracking-widest text-muted-foreground">
         {label}
+        {localCopies > 0 && (
+          <span className="inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-bold text-primary">
+            <Copy className="h-3 w-3" aria-hidden="true" />
+            {localCopies}
+          </span>
+        )}
       </p>
 
       {/* Copied overlay - same animation as the main generator */}

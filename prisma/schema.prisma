@@ -35,6 +35,7 @@ model Template {
   creatorId String
   creator   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   reported  Int      @default(0)
+  copies    Int      @default(0)
   createdAt DateTime @default(now())
 
   @@index([creatorId])

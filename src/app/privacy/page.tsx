@@ -1,10 +1,12 @@
-import { Header } from "@/components/header";
+﻿import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { ScrollToTop } from "@/components/scroll-to-top";
 import { Shield } from "lucide-react";
 
 export const metadata = {
   title: "Privacy Policy | TyeFlo",
-  description: "Privacy Policy for TyeFlo — your privacy is our priority. No data stored, no sign-in required.",
+  description:
+    "Privacy Policy for TyeFlo - the font generator stores nothing; optional creator accounts store your username, templates and points. Read the full details.",
 };
 
 export default function PrivacyPage() {
@@ -26,30 +28,114 @@ export default function PrivacyPage() {
 
           <div className="space-y-6 text-[15px] leading-relaxed text-muted-foreground sm:text-base">
             <div>
-              <h2 className="mb-2 text-lg font-bold text-foreground">1. No Data Stored</h2>
-              <p>TyeFlo is built with a privacy-first approach. We do not store, collect, or track any text you type into the font generator. Your text is converted in your browser and never sent to our servers for processing.</p>
+              <h2 className="mb-2 text-lg font-bold text-foreground">
+                1. The Font Generator
+              </h2>
+              <p>
+                TyeFlo is built privacy-first. The generator requires no
+                account and no personal information. Everything you type is
+                converted live in your browser and never sent to our servers
+                for processing, storage, or tracking. Using the generator is
+                completely anonymous and free.
+              </p>
             </div>
+
             <div>
-              <h2 className="mb-2 text-lg font-bold text-foreground">2. No Sign-In Required</h2>
-              <p>You do not need to create an account, sign in, or provide any personal information to use TyeFlo. The service is completely anonymous and free to use.</p>
+              <h2 className="mb-2 text-lg font-bold text-foreground">
+                2. Creator Accounts (Optional)
+              </h2>
+              <p>
+                Some features - publishing community bio templates, earning
+                creator points and level badges - require a free creator
+                account. Accounts are created through Google sign-in. If you
+                sign in, we store: your email address, your Google display
+                name and profile image, your chosen username, your creator
+                points, and the templates you publish. You never need an
+                account to browse, copy, or edit templates.
+              </p>
             </div>
+
             <div>
-              <h2 className="mb-2 text-lg font-bold text-foreground">3. Cookies & Analytics</h2>
-              <p>We may use basic, anonymous analytics to understand how the tool is used and improve the experience. This data is aggregated and does not identify individual users. No personal data is collected through cookies or tracking.</p>
+              <h2 className="mb-2 text-lg font-bold text-foreground">
+                3. Community Templates &amp; Moderation
+              </h2>
+              <p>
+                Templates you publish are stored on our servers and displayed
+                publicly with your username and level badge. All submissions
+                pass automatic moderation before going live, and community
+                reports may hide or remove templates. We may remove content
+                that violates our Terms.
+              </p>
             </div>
+
             <div>
-              <h2 className="mb-2 text-lg font-bold text-foreground">4. Third-Party Links</h2>
-              <p>Our content may reference or link to third-party platforms (WhatsApp, Discord, Instagram, etc.). We are not responsible for the privacy practices of these external sites. We encourage you to review their privacy policies.</p>
+              <h2 className="mb-2 text-lg font-bold text-foreground">
+                4. Third-Party Services
+              </h2>
+              <p>
+                TyeFlo relies on these services: Google, for sign-in
+                (authentication only - we never post on your behalf); our
+                database and hosting providers, to store the account data
+                described above; and standard, privacy-respecting analytics to
+                understand aggregate site usage. Our content may also link to
+                external platforms (Instagram, Discord, etc.) whose privacy
+                practices are their own.
+              </p>
             </div>
+
             <div>
-              <h2 className="mb-2 text-lg font-bold text-foreground">5. Changes to This Policy</h2>
-              <p>We may update this Privacy Policy from time to time. Any changes will be reflected on this page. Continued use of the Service after changes constitutes acceptance of the updated policy.</p>
+              <h2 className="mb-2 text-lg font-bold text-foreground">
+                5. Cookies
+              </h2>
+              <p>
+                We use a small session cookie solely to keep you signed in to
+                your creator account. The generator itself works fully without
+                cookies. We do not use advertising or cross-site tracking
+                cookies.
+              </p>
             </div>
-            <p className="text-sm text-muted-foreground">Last updated: {new Date().getFullYear()}</p>
+
+            <div>
+              <h2 className="mb-2 text-lg font-bold text-foreground">
+                6. Your Data &amp; Deletion
+              </h2>
+              <p>
+                Want your account or templates removed? Contact us at
+                hello@tyeflo.com (or via the contact page) and we will delete
+                your account data and published templates. Anonymous
+                generator usage has nothing to delete - it was never stored.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="mb-2 text-lg font-bold text-foreground">
+                7. Children
+              </h2>
+              <p>
+                TyeFlo is not directed at children under 13, and creator
+                accounts (Google sign-in) are not available to them.
+              </p>
+            </div>
+
+            <div>
+              <h2 className="mb-2 text-lg font-bold text-foreground">
+                8. Changes to This Policy
+              </h2>
+              <p>
+                We may update this Privacy Policy as features evolve.
+                Continued use after changes constitutes acceptance of the
+                updated policy.
+              </p>
+            </div>
+
+            <p className="text-sm text-muted-foreground">
+              Last updated: August 2026
+            </p>
           </div>
         </div>
       </main>
       <Footer />
+      <ScrollToTop />
     </div>
   );
 }
