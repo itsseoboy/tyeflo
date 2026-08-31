@@ -3,7 +3,7 @@
  * ------------------------------------
  * Converts regular ASCII text into 100+ fancy Unicode "font" styles
  * using mathematical alphanumeric symbols, enclosed alphanumerics,
- * combining diacritical marks, and other Unicode blocks.
+ * combining diacritical marks, & other Unicode blocks.
  *
  * NOTE: Unicode "fonts" are not real fonts — they are different
  * code points that visually resemble styled letters. This is why
